@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>obj test </title>
+		<script type="text/javascript" src="jquery-1.12.4.js"></script>
+		<script type="text/javascript" src="libs/three.js"></script>
+		<script type="text/javascript" src="libs/OBJLoader.js"></script>
+		<script type="text/javascript" src="libs/MTLLoader.js"></script>
+		<script type="text/javascript" src="libs/OBJMTLLoader.js"></script>
+		<script type="text/javascript" src="libs/TGALoader.js"></script>
+		<script type="text/javascript" src="libs/TrackballControls.js"></script>
+		<!--<script src="dat.gui.js"></script>-->
+		<!--<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script>
+		<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script>
+		<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script>-->
+		<style>
+			body {
+				/* set margin to 0 and overflow to hidden, to go fullscreen */
+				margin: 0;
+				overflow: hidden;
+			}
+			.text {
+				position: absolute;
+				right: 10px;
+				bottom: 50px;
+				background: green;
+				z-index: 11111111;
+			}
+			input {
+				width: 50px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div style="width:100%">
+			<!-- Div which will hold the Output -->
+			<div id="WebGL-output" style="width:80%;height:80%">
+			</div>
+			<div class="text" id="text">
+				<button>详情模式</button>
+				<div>平面index<input type="text" /></div>
+				<div>平面顶点index<input type="text" /></div>
+				<div>平面顶点坐标A<input type="text" id="textAx" /><input type="text" id="textAy" /><input type="text" id="textAz" /></div>
+				<div>平面顶点坐标B<input type="text" id="textBx" /><input type="text" id="textBy" /><input type="text" id="textBz" /></div>
+				<div>平面顶点坐标C<input type="text" id="textCx" /><input type="text" id="textCy" /><input type="text" id="textCz" /></div>
+				<button class="highlight">高亮</button>
+				<button class="positioning">定位</button>
+				<button class="exit">退出</button>
+			</div>
+		</div>
+		<!-- Javascript code that runs our Three.js examples -->
+		<script type="text/javascript">
+			$('.exit').click(function() {
+				window.history.back(-1);
+			})
+			var mesh;
+			var sphere;
+			var geoms = [];
+			var textMesh;
+			// once everything is loaded, we run our Three.js stuff.
+			var webGLRenderer;
+
+			function initThree() {
+				webGLRenderer = new THREE.WebGLRenderer();
+				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+				webGLRenderer.setClearColor(new THREE.Color(0x008080, 1.0));
+				document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
+			}
+			var camera;
+
+			function initCamera() {
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+				camera.position.x = 30;
+				camera.position.y = 100;
+				camera.position.z = -100;
+				camera.lookAt(scene.position);
+			}
+			/* 控制器 */
+			var trackballControls;
+
+			function initControls() {
+				trackballControls = new THREE.TrackballControls(camera);
+				trackballControls.rotateSpeed = 1.0; //旋转速度
+				trackballControls.zoomSpeed = 1.0; // 缩放速度
+				trackballControls.panSpeed = 1.0; // 平controls
+				trackballControls.staticMoving = true; // 静止移动，为 true 则没有惯性
+			}
+
+			var spotLight;
+
+			function initLight() {
+				spotLight = new THREE.DirectionalLight(0xffffff);
+				spotLight.position.set(10, 10, -50);
+				spotLight.intensity = 3;
+				scene.add(spotLight);
+			}
+
+			function initObject() {
+				var material = new THREE.PointCloudMaterial({
+					size: 4,
+					vertexColors: false,
+					color: 0xff00ff
+				});
+				var index = 0;
+				var indexX;
+				var indexY;
+				var indexZ;
+				//var loader = new THREE.OBJLoader();
+				var loader = new THREE.OBJMTLLoader();
+				//loader.load('meinumo.obj', function (loadedMesh) {
+				var materialSprite = new THREE.SpriteMaterial();
+				loader.load('meinumo.obj', 'meinumo.mtl', function(loadedMesh) {
+					var materialSprite = new THREE.SpriteMaterial();
+					var material = new THREE.MeshPhongMaterial({
+						color: 0x664324,
+						wireframe: false,
+					})
+					loadedMesh.children.forEach(function(child) {
+						//console.log(child)
+						//var geom = new THREE.Geometry();
+						//console.log(child);
+						child.material = material;
+						//child.material.map = texture;
+						//child.geometry.computeFaceNormals();
+						//child.geometry.computeVertexNormals();
+						//var vertices = child.geometry.vertices;
+						var color = new THREE.Color(0x444444);
+						var faces = child.geometry.faces;
+						//console.log(child.geometry.faces)
+//						console.log(faces)
+						faces.forEach(function(face) {
+							//console.log(face.a)
+							let v1 = child.geometry.vertices[face.a];
+							let v2 = child.geometry.vertices[face.b];
+							let v3 = child.geometry.vertices[face.c];
+							let material = new THREE.MeshPhongMaterial({
+								color: 0x00cc00,
+								wireframe: true,
+							});
+							let faceGeometry = new THREE.Geometry();
+							faceGeometry.vertices.push(new THREE.Vector3(v1.x, v1.y, v1.z));
+							faceGeometry.vertices.push(new THREE.Vector3(v2.x, v2.y, v2.z));
+							faceGeometry.vertices.push(new THREE.Vector3(v3.x, v3.y, v3.z));
+
+							let face3 = new THREE.Face3(0, 1, 2, face.normal, 0x808080, 0);
+							
+							faceGeometry.faces.push(face3);
+							faceGeometry.computeFaceNormals();
+							faceGeometry.computeVertexNormals();
+							let faceMesh = new THREE.Mesh(faceGeometry, material);
+							faceMesh.position.y = -20;
+							scene.add(faceMesh);
+
+						});
+//						geom.vertices = vertices;
+//						geom.faces = faces;
+					});
+					//
+					mesh = loadedMesh;
+					mesh.scale.set(1, 1, 1);
+					mesh.position.set(-30, -30, -30);
+					var material = new THREE.PointCloudMaterial({
+						size: 1,
+						vertexColors: true,
+						color: 0xffffff
+					});
+					var sphereGeometry = new THREE.SphereGeometry(4, 20, 20);
+					var sphereMaterial = new THREE.MeshLambertMaterial({
+						color: 0x7777ff
+					});
+					sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+					sphere.position.y = 0;
+					scene.add(sphere);
+				});
+//				var options = {
+//					size: 5,
+//					height: 0,
+//					font: "helvetiker",
+//					bevelThickness: 1,
+//					bevelSize: 1,
+//					bevelSegments: 1,
+//					curveSegments: 1,
+//					steps: 1
+//				}
+
+				var meshMaterial = new THREE.MeshPhongMaterial({
+					specular: 0xffffff,
+					color: 0x000000,
+					shininess: 10,
+					metal: true
+				});
+
+				function createMesh(geom) {
+					var meshMaterial = new THREE.MeshPhongMaterial({
+						specular: 0xffffff,
+						color: 0xeeffff,
+						shininess: 100,
+						metal: true
+					});
+					var plane = THREE.SceneUtils.createMultiMaterialObject(geom, [meshMaterial]);
+					return plane;
+				}
+			}
+			var vector;
+
+			function onDocumentMouseDown(event) {
+				//console.log(event);
+				//新建一个三维单位向量 假设z方向就是0.5
+				//根据照相机，把这个向量转换到视点坐标系
+				//这里定义深度值为0.5，深度值越大，意味着精度越高
+				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5).unproject(camera);
+//				console.log((event.clientX / window.innerWidth) * 2 - 1)
+//				console.log(event.clientX)
+//				console.log(event.clientY)
+//				console.log(-(event.clientY / window.innerHeight) * 2 + 1)
+				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
+				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+				//console.log(camera.position)
+				var intersects = raycaster.intersectObjects(scene.children);
+				//console.log(scene.children)
+				console.log(intersects[0])
+				console.log(intersects[0].object.geometry.faces)
+				if(intersects.length > 0) {
+					var selected = intersects[0];//取第一个物体
+//					console.log(intersects[0])
+//				    console.log("x坐标:"+selected.point.x);
+//				    console.log("y坐标:"+selected.point.y);
+//				    console.log("z坐标:"+selected.point.z);
+					//console.log(intersects[0]);
+					let materialSelected = new THREE.MeshPhongMaterial({
+						color: 0xFF0000,
+						wireframe: false,
+					});
+					intersects[0].object.material = materialSelected;
+					
+					var vertices = intersects[0].object.geometry.vertices;
+					//console.log(intersects[0].faceIndex)
+					//console.log(intersects[0].object)
+					scene.remove(textMesh);
+					var posAx = vertices[0].x
+					var posAy = vertices[0].y
+					var posAz = vertices[0].z
+
+					var posBx = vertices[1].x
+					var posBy = vertices[1].y
+					var posBz = vertices[1].z
+
+					var posCx = vertices[2].x
+					var posCy = vertices[2].y
+					var posCz = vertices[2].z
+					$('#textAx').val(posAx)
+					$('#textAy').val(posAy)
+					$('#textAz').val(posAz)
+					$('#textBx').val(posBx)
+					$('#textBy').val(posBy)
+					$('#textBz').val(posBz)
+					$('#textCx').val(posCx)
+					$('#textCy').val(posCy)
+					$('#textCz').val(posCz)
+				}
+				$(event.target).focus()
+
+			}
+			var scene;
+			var clock;
+
+			function initScene() {
+				clock = new THREE.Clock();
+				scene = new THREE.Scene();
+			}
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
+				render();
+			}
+
+			function init() {
+				initThree();
+				initScene();
+				initCamera();
+				initLight();
+				initObject();
+				initControls();
+				window.addEventListener("resize", onWindowResize, false);
+				trackballControls.addEventListener('change', function() {
+					console.log("相机动了！");
+				});
+				render();
+			}
+			function render() {
+				var delta = clock.getDelta();
+				trackballControls.update(delta);
+				webGLRenderer.clear();
+				requestAnimationFrame(render);
+				webGLRenderer.render(scene, camera);
+			}
+			var factor = 50//每次放大的倍数
+			$('.positioning').click(function() {
+				vector.sub(camera.position).normalize();
+				camera.position.x += vector.x * factor;
+				camera.position.y += vector.y * factor;
+				camera.position.z += vector.z * factor;
+				trackballControls.target.x += vector.x * factor;
+				trackballControls.target.y += vector.y * factor;
+				trackballControls.target.z += vector.z * factor;
+			})
+			$('.highlight').click(function() {
+				//var vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+				var vector = new THREE.Vector3((318 / window.innerWidth) * 2 - 1, -(511 / window.innerHeight) * 2 + 1, 0.5).unproject(camera);
+				console.log(vector)
+				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+				var intersects = raycaster.intersectObjects(scene.children);
+				console.log(scene.children);
+				console.log(intersects)
+				//将所有的相交的模型的颜色设置为红色，如果只需要将第一个触发事件，那就数组的第一个模型改变颜色即可
+				if(intersects.length > 0) {
+					//console.log(intersects[0]);
+					let materialSelected = new THREE.MeshPhongMaterial({
+						color: 0xFF0000,
+						wireframe: false,
+					});
+					intersects[0].object.material = materialSelected;
+				}
+			})
+
+			document.getElementById('WebGL-output').addEventListener('mousedown', onDocumentMouseDown);
+
+			/* 初始加载 */
+			(function() {
+				init();
+			})();
+		</script>
+	</body>
+
+</html>

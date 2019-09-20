@@ -153,6 +153,7 @@
 				this.buildId = rows.id
 				this.buildShow = true
 				this.baseBuild = false
+				window.location.href= 'http://99.48.68.95:8085/static/aphrodite.html'
 			},
 			onCancle() {
 				this.boxShow = false

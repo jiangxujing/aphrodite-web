@@ -1,0 +1,146 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# 创建的文件:20.01.2017 20:15:20
+
+newmtl arisha_hair_pigtail_cherry_band_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka arisha_hair_pigtail_cherry_band.tga
+	map_Kd arisha_hair_pigtail_cherry_band.tga
+
+newmtl arisha_hair_pigtail_cherry_scalp_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka arisha_hair_pigtail_cherry_scalp.tga
+	map_Kd arisha_hair_pigtail_cherry_scalp.tga
+	map_d arisha_hair_pigtail_cherry_scalp.tga
+
+newmtl arisha_hair_pigtail_cherry_tga
+	Ns 30.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.1350 0.1350 0.1350
+	Ke 0.0000 0.0000 0.0000
+	map_Ka arisha_hair_pigtail_cherry.tga
+	map_Kd arisha_hair_pigtail_cherry.tga
+	map_d arisha_hair_pigtail_cherry.tga
+	map_bump -bm 0.3000 Map__13_法线凹凸.tga
+
+newmtl pc_evy_eyeball_r01_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_eyeball.tga
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_eyeball.tga
+
+newmtl pc_evy_eyelash01_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_eyelash01.tga
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_eyelash01.tga
+	map_d D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_eyelash01.tga
+
+newmtl pc_evy_teeth_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_teeth.tga
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_teeth.tga
+
+newmtl pc_evy_skin_face01_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_skin_face01.tga
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\3.fbm\pc_evy_skin_face01.tga
+
+newmtl pc_fiona_inner_halterneck_trans_tga
+	Ns 10.0000
+	Ni 1.5000
+	d 0.2000
+	Tr 0.8000
+	Tf 0.2000 0.2000 0.2000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.0000 0.0000 0.0000
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\Texture2D\pc_fiona_inner_halterneck_trans.tga
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\Texture2D\pc_fiona_inner_halterneck_trans.tga
+
+newmtl pc_fiona_inner_halterneck_tga
+	Ns 60.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.5880 0.5880 0.5880
+	Kd 0.5880 0.5880 0.5880
+	Ks 0.7200 0.7200 0.7200
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\Texture2D\pc_fiona_inner_halterneck.tga
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\Texture2D\pc_fiona_inner_halterneck.tga
+
+newmtl fiona_skin_body01_tga
+	Ns 30.0000
+	Ni 1.5000
+	d 1.0000
+	Tr 0.0000
+	Tf 1.0000 1.0000 1.0000 
+	illum 2
+	Ka 0.0000 0.0000 0.0000
+	Kd 0.0000 0.0000 0.0000
+	Ks 0.2700 0.2700 0.2700
+	Ke 0.0000 0.0000 0.0000
+	map_Ka D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\Texture2D\fiona_skin_body01.psd
+	map_Kd D:\QMDownload\白发女孩\Users\meikuu\Downloads\妹子\Cg_Model\Texture2D\fiona_skin_body01.psd
