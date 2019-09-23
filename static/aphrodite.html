@@ -104,7 +104,7 @@
 			<div class="wrapper">
 				<div class="box">
 					<div class="title">您没有填入index</div>
-					<button class="btn">确定</button>
+					<button class="btn confirmBtn">确定</button>
 				</div>
 			</div>
 		</div>
@@ -113,8 +113,11 @@
 			$('.exit').click(function() {
 				window.history.back(-1);
 			})
-			$('.btn').click(function(){
+			$('.confirmBtn').click(function(){
 				$('.wrapper').toggle()
+			})
+			$('.detail').click(function(){
+				window.location.href = 'detail.html'
 			})
 			var mesh;
 //			var sphere;
@@ -199,6 +202,7 @@
 					mesh = loadedMesh;
 					mesh.scale.set(1, 1, 1);
 					mesh.position.set(-30, -30, -30);
+					scene.add(mesh)
 					var material = new THREE.PointCloudMaterial({
 						size: 1,
 						vertexColors: true,
@@ -224,7 +228,7 @@
 			}
 
 			var vector;
-
+			var flag = 1
 			function onDocumentMouseDown(event) {
 				//新建一个三维单位向量 假设z方向就是0.5
 				//根据照相机，把这个向量转换到视点坐标系
@@ -241,12 +245,23 @@
 						color: 0xFF0000,
 						wireframe: false,
 					});
-					intersects[0].object.material = materialSelected;
-					console.log(intersects[0])
+					let material1 = new THREE.MeshPhongMaterial({
+								color: 0x008000, //3D线条颜色
+								wireframe: true,
+							});
+					if(flag == 1){
+						console.log('加入材质')
+						flag = 2
+						intersects[0].object.material = materialSelected;
+					}else{
+						console.log('取消加入材质')
+						flag = 1
+						intersects[0].object.material = material1
+					}
+					
 					for(var i=0;i<geometryArr.length;i++){
 						if(intersects[0].object.material.uuid == geometryArr[i].material.uuid){
 							$('#indexId').val(i)
-							console.log(i)
 						}
 					}
 					var vertices = intersects[0].object.geometry.vertices;
@@ -320,16 +335,30 @@
 				trackballControls.target.y += vector.y * factor;
 				trackballControls.target.z += vector.z * factor;
 			})
+			let flag1 = 1
 			$('.highlight').click(function() {
 				let materialSelected = new THREE.MeshPhongMaterial({
 					color: 0xFF0000,
 					wireframe: false,
 				});
+				let material1 = new THREE.MeshPhongMaterial({
+								color: 0x008000, //3D线条颜色
+								wireframe: true,
+							});
 				let index = parseFloat($('#indexId').val())
-				if(!index){
+				console.log(index)
+				if(index <= 0){
+					console.log('ggg')
 					$('.wrapper').show()
 				}else{
-					geometryArr[index].material = materialSelected
+					if(flag1 == 1){
+						console.log('nih ')
+						flag1 = 2
+						geometryArr[index].material = materialSelected
+					}else{
+						flag1 = 1
+						geometryArr[index].material = material1
+					}
 				}
 			})
 			$('#WebGL-output').click(function(event){
