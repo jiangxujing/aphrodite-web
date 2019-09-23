@@ -110,9 +110,7 @@
 				var indexX;
 				var indexY;
 				var indexZ;
-				//var loader = new THREE.OBJLoader();
 				var loader = new THREE.OBJMTLLoader();
-				//loader.load('meinumo.obj', function (loadedMesh) {
 				var materialSprite = new THREE.SpriteMaterial();
 				loader.load('meinumo.obj', 'meinumo.mtl', function(loadedMesh) {
 					var materialSprite = new THREE.SpriteMaterial();
@@ -121,18 +119,9 @@
 						wireframe: false,
 					})
 					loadedMesh.children.forEach(function(child) {
-						//console.log(child)
-						//var geom = new THREE.Geometry();
-						//console.log(child);
 						child.material = material;
-						//child.material.map = texture;
-						//child.geometry.computeFaceNormals();
-						//child.geometry.computeVertexNormals();
-						//var vertices = child.geometry.vertices;
 						var color = new THREE.Color(0x444444);
 						var faces = child.geometry.faces;
-						//console.log(child.geometry.faces)
-						//						console.log(faces)
 						faces.forEach(function(face) {
 							let v1 = child.geometry.vertices[face.a];
 							let v2 = child.geometry.vertices[face.b];
@@ -154,17 +143,11 @@
 							faceGeometry.computeFaceNormals();
 							faceGeometry.computeVertexNormals();
 							let faceMesh = new THREE.Mesh(faceGeometry, material);
-							//console.log(faceMesh)
 							geometryArr.push(faceMesh)
 							faceMesh.position.y = -20;
 							scene.add(faceMesh);
-							//console.log(faceGeometry)
 						});
-
-						//						geom.vertices = vertices;
-						//						geom.faces = faces;
 					});
-					//
 					mesh = loadedMesh;
 					mesh.scale.set(1, 1, 1);
 					mesh.position.set(-30, -30, -30);
@@ -215,39 +198,30 @@
 			var vector;
 
 			function onDocumentMouseDown(event) {
-				//console.log(geometryArr)
-				console.log(event)
-				//console.log(event);
 				//新建一个三维单位向量 假设z方向就是0.5
 				//根据照相机，把这个向量转换到视点坐标系
 				//这里定义深度值为0.5，深度值越大，意味着精度越高
 				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5).unproject(camera);
-				//				console.log((event.clientX / window.innerWidth) * 2 - 1)
 				console.log(event.clientX)
 				console.log(event.clientY)
-				//				console.log(-(event.clientY / window.innerHeight) * 2 + 1)
 				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
 				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-				//console.log(camera.position)
 				var intersects = raycaster.intersectObjects(scene.children);
-				//console.log(scene.children)
-				//console.log(intersects[0].object.geometry.faces)
 				if(intersects.length > 0) {
 					var selected = intersects[0]; //取第一个物体
-					//					console.log(intersects[0])
-					//				    console.log("x坐标:"+selected.point.x);
-					//				    console.log("y坐标:"+selected.point.y);
-					//				    console.log("z坐标:"+selected.point.z);
-					//console.log(intersects[0]);
 					let materialSelected = new THREE.MeshPhongMaterial({
 						color: 0xFF0000,
 						wireframe: false,
 					});
 					intersects[0].object.material = materialSelected;
-					console.log(intersects[0].object.material)
+					console.log(intersects[0].object.material.uuid)
+					for(var i=0;i<geometryArr.length;i++){
+						if(intersects[0].object.material.uuid == geometryArr[i].material.uuid){
+							$('#indexId').val(i)
+							console.log(i)
+						}
+					}
 					var vertices = intersects[0].object.geometry.vertices;
-					//console.log(intersects[0].faceIndex)
-					//console.log(intersects[0].object)
 					scene.remove(textMesh);
 					var posAx = vertices[0].x
 					var posAy = vertices[0].y
