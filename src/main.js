@@ -12,26 +12,26 @@ Vue.prototype.$utils = utils
 Vue.prototype.$api = api
 Vue.use(ElementUI)
 Vue.config.productionTip = false
-//router.beforeEach((to, from, next) => {
-//      let account = localStorage.getItem('userName')
-//      if (to.path === '/Login') {
-//          if (account) {
-//              next('/ClusterManagement')
-//          } else {
-//              next()
-//              return
-//          }
-//      }
-//      if (!account && to.path !== '/Login') {
-//          next({ path: '/Login' })
-//      } else {
-//          next()
-//      }
-//      if (!account) {
-//          next({ path: '/Login' })
-//          return
-//      }
-//})
+router.beforeEach((to, from, next) => {
+        let account = sessionStorage.getItem('userName')
+        if (to.path === '/Login') {
+            if (account) {
+                next('/ObjManagement.vue')
+            } else {
+                next()
+                return
+            }
+        }
+        if (!account && to.path !== '/Login') {
+            next({ path: '/Login' })
+        } else {
+            next()
+        }
+        if (!account) {
+            next({ path: '/Login' })
+            return
+        }
+})
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
