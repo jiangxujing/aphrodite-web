@@ -48,11 +48,13 @@
 				<el-row>
 					<el-col :span="4" class="search-label"><span class="label">Obj文件：</span></el-col>
 					<el-col :span="10">
-							<el-input type="text" v-model="fileUrl" style="width:300px" clearable></el-input>
-							<el-upload class="upload-demo" style="text-align:left;display: inline-block;" accept="*" :show-file-list="false" :http-request="importExport" action="string">
+						<el-input type="text" v-model="fileUrl" style="width:300px" clearable></el-input>
+						<el-upload v-if="!fileUrl" class="upload-demo" style="text-align:left;display: inline-block;" accept="*" :show-file-list="false" :http-request="importExport" action="string">
 							<el-button size="small" type="green">上传</el-button>
 						</el-upload>
+						<el-button @click="deleteObj" size="small" type="yellow" v-else>删除</el-button>
 					</el-col>
+					
 				</el-row>
 				<el-row>
 					<div style="text-align: center;">
@@ -91,12 +93,32 @@
 			cleanData() {
 				this.getObjList()
 			},
+			deleteObj(){
+				let req = {
+					fileUrl:this.fileUrl
+				}
+				api.post(api.getUrl('upload'), req).then(res => {
+					console.log('res')
+					if(res.code == '0000') {
+						Message({
+							showClose: true,
+							type: 'success',
+							message: '删除成功'
+						})
+						this.fileUrl = res.content
+					} else {
+						Message({
+							showClose: true,
+							type: 'error',
+							message: '上传失败'
+						})
+					}
+				})
+			},
 			importExport(file) {
-					console.log('resssssss')
 				this.formData = new FormData()
 				this.formData.append('file', file.file);
 				api.upload(api.getUrl('upload'), this.formData).then(res => {
-					console.log('res')
 					if(res.code == '0000') {
 						Message({
 							showClose: true,
@@ -120,7 +142,6 @@
 						name: this.objName,
 						fileUrl: this.fileUrl
 					}
-					console.log(req)
 					api.post(api.getUrl('getObjSave'), req).then(res => {
 						if(res.code == '0000') {
 							this.boxShow = false
@@ -133,7 +154,6 @@
 						}
 
 					}).catch(() => {
-						console.log("系统异常")
 					})
 				} else {
 					this.$message({
@@ -151,7 +171,6 @@
 					this.boxShow = false
 							this.getObjList()
 				}).catch(() => {
-					console.log("系统异常")
 				})
 			},
 			onAdd() {
