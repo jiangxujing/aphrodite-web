@@ -42,22 +42,14 @@
 				<el-row>
 					<el-col :span="4" class="search-label"><span class="red">*</span><span class="label">名称：</span></el-col>
 					<el-col :span="4">
-						<el-input v-model="objName" clearable placeholder="名称"></el-input>
+						<el-input v-model="objName" clearable placeholder="名称" style="width:300px"></el-input>
 					</el-col>
 				</el-row>
-				<!--<el-row>
-					<el-col :span="4" class="search-label"><span class="red">*</span><span class="label">Obj文件：</span></el-col>
-					<el-col :span="4">
-						<el-input v-model="objFile" clearable placeholder="Obj文件"></el-input>
-					</el-col>
-				</el-row>-->
 				<el-row>
 					<el-col :span="4" class="search-label"><span class="label">Obj文件：</span></el-col>
-					<el-col :span="8">
-						<!--<el-upload class="upload-demo" action="" style="display:inline-block" :http-request="importExport" :auto-upload="false" ref="upload" accept=".xls, .xlsx">
-							<el-button size="small" type="green">上传</el-button>
-						</el-upload>-->
-						<el-upload class="upload-demo" accept="*" :http-request="importExport" :show-file-list="false" action="string">
+					<el-col :span="10">
+							<el-input type="text" v-model="fileUrl" style="width:300px" clearable></el-input>
+							<el-upload class="upload-demo" style="text-align:left;display: inline-block;" accept="*" :show-file-list="false" :http-request="importExport" action="string">
 							<el-button size="small" type="green">上传</el-button>
 						</el-upload>
 					</el-col>
@@ -65,6 +57,7 @@
 				<el-row>
 					<div style="text-align: center;">
 						<el-button @click="onBuild" type="green">调试</el-button>
+						<el-button @click="onSave" type="green">保存</el-button>
 						<el-button @click="onCancle" type="yellow">取消</el-button>
 					</div>
 				</el-row>
@@ -88,6 +81,7 @@
 				total: 10,
 				currentPage4: 1,
 				tableData: [],
+				fileUrl:'',
 				pageNo: 0,
 				pageSize: 10,
 			}
@@ -120,14 +114,14 @@
 				})
 			},
 			onSave() {
-				if(this.objName && this.objFile) {
+				if(this.objName && this.fileUrl) {
 					let req = {
 						id: this.id || null,
 						name: this.objName,
-						description: this.objFile
+						fileUrl: this.fileUrl
 					}
 					console.log(req)
-					api.post(api.getUrl('poolAdd'), req).then(res => {
+					api.post(api.getUrl('getObjSave'), req).then(res => {
 						if(res.code == '0000') {
 							this.boxShow = false
 							this.getObjList()
@@ -161,13 +155,15 @@
 				})
 			},
 			onAdd() {
+				this.objName = ''
+				this.fileUrl = ''
 				this.boxShow = true
 			},
 			build(rows) {
 				this.buildId = rows.id
 				this.buildShow = true
 				this.baseBuild = false
-				window.location.href= 'http://99.48.68.95:8085/static/aphrodite.html'
+				window.location.href= 'http://99.48.68.95:8081/static/aphrodite.html'
 			},
 			onCancle() {
 				this.boxShow = false
