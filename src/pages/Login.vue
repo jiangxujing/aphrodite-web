@@ -43,14 +43,14 @@ export default {
   		  this.$refs[formName].validate((valid) => {
           if (valid) {
           	let req = {
-  			loginName:this.form.userName,
-  			loginPassword:this.form.password
+  			account:this.form.userName,
+  			password:this.form.password
   		}
           	api.post(api.getUrl('login'),req).then(res=>{
           		if(res.code == '0000'){
           		    sessionStorage.setItem('userName',res.content.name)
           			sessionStorage.setItem('token',res.content.token)
-          			this.$router.push("/ClusterManagement")
+          			this.$router.push("/ObjManagement")
           		}else{
           			MessageBox.alert(res.desc, '提示')
           		}
@@ -68,14 +68,14 @@ export default {
   		  this.$refs[formName].validate((valid) => {
           if (valid) {
           	let req = {
-  			loginName:this.form.userName,
-  			loginPassword:this.form.password
+  			account:this.form.userName,
+  			password:this.form.password
   		}
           	api.post(api.getUrl('login'),req).then(res=>{
           		if(res.code == '0000'){
           			sessionStorage.setItem('userName',res.content.name)
           			sessionStorage.setItem('token',res.content.token)
-          			this.$router.push("/ClusterManagement")
+          			this.$router.push("/ObjManagement")
           		}else{
           			MessageBox.alert(res.desc, '提示')
           		}

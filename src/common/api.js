@@ -30,7 +30,7 @@ function filterNull(o) {
     return o
 }
 
-const prefix = '/cloud'
+const prefix = '/aphrodite'
 const prefix2 = '/commerce-web'
 
 const _parseJSON = str => {
@@ -243,12 +243,12 @@ const upload = (url, data) => {
             let respData = resp.data
             respData['code'] = ~~(respData['code'])
                 // respData['content'] = _parseJSON(respData['content'])
-            if (respData['code'] === 5040) {
+            if (respData['code'] === 1111) {
                 cancel && cancel()
                 MessageBox.alert('登录状态失效，请重新登录！', '提示', {
                     confirmButtonText: '去登录',
                     callback: action => {
-                        let url = location.origin + location.pathname + '/Login'
+                        let url = location.origin + location.pathname
                         localStorage.removeItem('userName')
                         localStorage.removeItem('token')
                         localStorage.removeItem('role')

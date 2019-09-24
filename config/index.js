@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
       proxyTable: {
-    	 '/cloud/**': {
-        target: 'http://99.48.68.111:8095', // 你接口的域名
+    	 '/aphrodite/**': {
+        target: 'http://99.48.68.100:8097', // 你接口的域名
         secure: false,
         changeOrigin: false,
       }

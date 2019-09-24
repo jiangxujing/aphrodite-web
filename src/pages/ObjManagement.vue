@@ -15,9 +15,9 @@
 			</div>
 			<div>
 				<el-table :data="tableData" style="width: 100%">
-					<el-table-column prop="name" label="Pool名称" align="center">
+					<el-table-column prop="name" label="名称" align="center">
 					</el-table-column>
-					<el-table-column prop="description" label="文件名称" align="center">
+					<el-table-column prop="fileUrl" label="文件名称" align="center">
 					</el-table-column>
 					<el-table-column prop="operator" label="操作人" align="center">
 					</el-table-column>
@@ -54,7 +54,10 @@
 				<el-row>
 					<el-col :span="4" class="search-label"><span class="label">Obj文件：</span></el-col>
 					<el-col :span="8">
-						<el-upload class="upload-demo" action="" style="display:inline-block" :http-request="importExport" :auto-upload="false" ref="upload" accept=".xls, .xlsx">
+						<!--<el-upload class="upload-demo" action="" style="display:inline-block" :http-request="importExport" :auto-upload="false" ref="upload" accept=".xls, .xlsx">
+							<el-button size="small" type="green">上传</el-button>
+						</el-upload>-->
+						<el-upload class="upload-demo" accept="*" :http-request="importExport" :show-file-list="false" action="string">
 							<el-button size="small" type="green">上传</el-button>
 						</el-upload>
 					</el-col>
@@ -95,17 +98,18 @@
 				this.getObjList()
 			},
 			importExport(file) {
+					console.log('resssssss')
 				this.formData = new FormData()
 				this.formData.append('file', file.file);
-				api.upload(api.getUrl('export'), this.formData).then(res => {
-					if(!!res) {
+				api.upload(api.getUrl('upload'), this.formData).then(res => {
+					console.log('res')
+					if(res.code == '0000') {
 						Message({
 							showClose: true,
 							type: 'success',
 							message: '上传成功'
 						})
-						this.$refs.upload.clearFiles()
-						this.getCommodityManagementList()
+						this.fileUrl = res.content
 					} else {
 						Message({
 							showClose: true,
@@ -145,6 +149,16 @@
 				}
 			},
 			onBuild(rows) {
+				let req = {
+					name:this.objName || null,
+					fileUrl:this.fileUrl
+				}
+				api.post(api.getUrl('getObjSave'), req).then(res => {
+					this.boxShow = false
+							this.getObjList()
+				}).catch(() => {
+					console.log("系统异常")
+				})
 			},
 			onAdd() {
 				this.boxShow = true
@@ -165,10 +179,10 @@
 				let req = {
 					id: rows.id
 				}
-				api.post(api.getUrl('poolDetail'), req).then(res => {
+				api.post(api.getUrl('getObjDetail'), req).then(res => {
 					let content = res.content
-					this.poolName = content.name
-					this.description = content.description
+					this.objName = content.name
+					this.fileUrl = content.fileUrl
 				}).catch(() => {
 					console.log("系统异常")
 				})
@@ -192,7 +206,7 @@
 					let req = {
 						id: rows.id
 					}
-					api.post(api.getUrl('remove'), req).then(res => {
+					api.post(api.getUrl('getObjDel'), req).then(res => {
 						if(res.code == '0000') {
 							this.$message({
 								type: 'info',
@@ -223,7 +237,7 @@
 					pageSize: this.pageSize,
 					name: this.name || null,
 				}
-				api.post(api.getUrl('getPoolList'), req).then(res => {
+				api.post(api.getUrl('getObjList'), req).then(res => {
 					this.tableData = res.content;
 					this.total = res.total
 				}).catch(() => {
