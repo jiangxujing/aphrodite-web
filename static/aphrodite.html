@@ -3,6 +3,7 @@
 
 	<head>
 		<title>obj test </title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script type="text/javascript" src="jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="libs/three.js"></script>
 		<script type="text/javascript" src="libs/OBJLoader.js"></script>
@@ -68,27 +69,24 @@
 			}
 			
 			.btn {
-				outline: none;
-				background: #FF4C5F;
-				color: #fff;
-				border: none;
-				width: 60px;
-				height: 25px;
-				border-radius: 5px;
 				margin-top: 15px;
-				cursor: pointer;
 			}
 			
 			.positioning {
 				background: #00AB29;
 			}
 			
-			.exit {
-				background: #FF7F00;
-			}
-			
 			.detail {
 				width: 100px;
+			}
+			.form-control{
+				display: inline-block;
+				width:70px;
+			}
+			.txt{
+				width:90px;
+				display: inline-block;
+				font-weight: bold;
 			}
 		</style>
 	</head>
@@ -98,15 +96,15 @@
 			<div id="WebGL-output" style="width:80%;height:80%">
 			</div>
 			<div class="text" id="text">
-				<button class="detail btn">详情模式</button>
-				<div>平面index&nbsp;&nbsp;<input type="text" id="indexId" /></div>
-				<div>平面顶点index&nbsp;&nbsp;<input type="text" /></div>
-				<div>平面顶点坐标A&nbsp;&nbsp;<input type="text" id="textAx" /><input type="text" id="textAy" /><input type="text" id="textAz" /></div>
-				<div>平面顶点坐标B&nbsp;&nbsp;<input type="text" id="textBx" /><input type="text" id="textBy" /><input type="text" id="textBz" /></div>
-				<div>平面顶点坐标C&nbsp;&nbsp;<input type="text" id="textCx" /><input type="text" id="textCy" /><input type="text" id="textCz" /></div>
-				<button class="highlight btn">高亮</button>
-				<button class="positioning btn">定位</button>
-				<button class="exit btn">退出</button>
+				<button  type="button" class="detail btn btn-info">详情模式</button>
+				<div><div class="txt">平面index</div><input type="text" class="form-control" id="indexId" /></div>
+				<div><div class="txt">平面顶点index</div><input type="text"  class="form-control" disabled id="vertexId1" /><input  class="form-control" type="text" disabled id="vertexId2" /><input  class="form-control" type="text" disabled id="vertexId3" /></div>
+				<div><div class="txt">平面顶点坐标A</div><input  class="form-control" type="text" id="textAx" disabled/><input type="text"  class="form-control" id="textAy" disabled/><input type="text"  class="form-control" id="textAz" disabled/></div>
+				<div><div class="txt">平面顶点坐标B</div><input  class="form-control" type="text" id="textBx" disabled/><input type="text"  class="form-control" id="textBy" disabled/><input type="text"  class="form-control" id="textBz" disabled/></div>
+				<div><div class="txt">平面顶点坐标C</div><input  class="form-control" type="text" id="textCx" disabled/><input type="text"  class="form-control" id="textCy" disabled/><input type="text"  class="form-control" id="textCz" disabled/></div>
+				<button  type="button" class="highlight btn btn-primary">高亮</button>
+			<!--	<button class="positioning btn">定位</button>-->
+				<button  type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
 			</div>
 			<div class="wrapper">
 				<div class="box">
@@ -118,7 +116,7 @@
 		<!-- Javascript code that runs our Three.js examples -->
 		<script type="text/javascript">
 			$('.exit').click(function() {
-				window.history.back(-1);
+			window.location.href = 'http://99.48.68.95:8086/ObjManagement'
 			})
 			$('.confirmBtn').click(function() {
 				$('.wrapper').toggle()
@@ -142,9 +140,9 @@
 
 			function initCamera() {
 				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-				camera.position.x = 30;
-				camera.position.y = 100;
-				camera.position.z = -100;
+				camera.position.x = 0;
+				camera.position.y = 0;
+				camera.position.z = 100;
 				camera.lookAt(scene.position);
 			}
 			/* 控制器 */
@@ -161,11 +159,16 @@
 
 			function initLight() {
 				spotLight = new THREE.DirectionalLight(0xC0C0C0);
-				spotLight.position.set(10, 10, -50);
+				spotLight.position.set(0, 0, -50);
 				spotLight.intensity = 3;
 				scene.add(spotLight);
+				 var light = new THREE.DirectionalLight(0xC0C0C0) //
+				 light.intensity = 3;
+          light.position.set(0, 0, 50);
+            scene.add(light);
 			}
 			let geometryArr = []
+			let vertexArr = []
 
 			function initObject() {
 				var material = new THREE.PointCloudMaterial({
@@ -189,7 +192,10 @@
 						child.material = material;
 						var color = new THREE.Color(0x444444);
 						var faces = child.geometry.faces;
+
 						faces.forEach(function(face) {
+//							console.log(face)
+							vertexArr.push(face)
 							let v1 = child.geometry.vertices[face.a];
 							let v2 = child.geometry.vertices[face.b];
 							let v3 = child.geometry.vertices[face.c];
@@ -207,23 +213,24 @@
 							faceGeometry.computeVertexNormals();
 							let faceMesh = new THREE.Mesh(faceGeometry, material);
 							geometryArr.push(faceMesh)
-							faceMesh.position.y = -20;
+							faceMesh.position.y = -35;
 							scene.add(faceMesh);
+
 						});
 					});
+					mesh = loadedMesh
 				});
 			}
 
-			var vector;
 			var flag = 1
 
 			function onDocumentMouseDown(event) {
 				//新建一个三维单位向量 假设z方向就是0.5
 				//根据照相机，把这个向量转换到视点坐标系
 				//这里定义深度值为0.5，深度值越大，意味着精度越高
-				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5).unproject(camera);
-				console.log(event.clientX)
-				console.log(event.clientY)
+				var vector;
+				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+				vector = vector.unproject(camera)
 				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
 				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 				var intersects = raycaster.intersectObjects(scene.children);
@@ -239,12 +246,18 @@
 					});
 					if(intersects[0].object.material.wireframe == false) {
 						intersects[0].object.material = material1
+						$('.highlight').html('高亮')
 					} else {
+						$('.highlight').html('取消高亮')
+						
 						intersects[0].object.material = materialSelected;
 					}
 					for(var i = 0; i < geometryArr.length; i++) {
 						if(intersects[0].object.material.uuid == geometryArr[i].material.uuid) {
 							$('#indexId').val(i)
+							$('#vertexId1').val(vertexArr[i].a)
+							$('#vertexId2').val(vertexArr[i].b)
+							$('#vertexId3').val(vertexArr[i].c)
 						}
 					}
 					var vertices = intersects[0].object.geometry.vertices;
@@ -270,7 +283,6 @@
 					$('#textCy').val(posCy)
 					$('#textCz').val(posCz)
 				}
-				$(event.target).focus()
 			}
 
 			function onTextDocumentMouseDown(event) {
@@ -299,8 +311,8 @@
 				initObject();
 				initControls();
 				window.addEventListener("resize", onWindowResize, false);
-				trackballControls.addEventListener('change', function() {
-					console.log("相机动了！");
+				trackballControls.addEventListener('change', function(e) {
+					console.log(e);
 				});
 				render();
 			}
@@ -314,14 +326,42 @@
 			}
 			var factor = 50 //每次放大的倍数
 			$('.positioning').click(function() {
+				let index = parseFloat($('#indexId').val())
+				var vertices = geometryArr[index].geometry.vertices;
+				scene.remove(textMesh);
+				var posAx = vertices[0].x
+				var posAy = vertices[0].y
+				var posAz = vertices[0].z
+
+				var posBx = vertices[1].x
+				var posBy = vertices[1].y
+				var posBz = vertices[1].z
+
+				var posCx = vertices[2].x
+				var posCy = vertices[2].y
+				var posCz = vertices[2].z
+				$('#textAx').val(posAx)
+				$('#textAy').val(posAy)
+				$('#textAz').val(posAz)
+				$('#textBx').val(posBx)
+				$('#textBy').val(posBy)
+				$('#textBz').val(posBz)
+				$('#textCx').val(posCx)
+				$('#textCy').val(posCy)
+				$('#textCz').val(posCz)
+				//var vector = new THREE.Vector3((posAx+posBx+posCx)/3,(posAy+posBy+posCy)/3,(posAz+posBz+posCz))
+				let vector = mesh.position.clone().project(camera);
 				vector.sub(camera.position).normalize();
 				console.log(vector)
 				camera.position.x += vector.x * factor;
 				camera.position.y += vector.y * factor;
 				camera.position.z += vector.z * factor;
+				console.log(camera.position)
 				trackballControls.target.x += vector.x * factor;
 				trackballControls.target.y += vector.y * factor;
 				trackballControls.target.z += vector.z * factor;
+				console.log(trackballControls.target)
+
 			})
 			let flag1 = 1
 			$('.highlight').click(function() {
@@ -338,11 +378,42 @@
 				if(index <= 0) {
 					$('.wrapper').show()
 				} else {
+					console.log(geometryArr[index].geometry.vertices)
+					var vertices = geometryArr[index].geometry.vertices;
+						var posAx = vertices[0].x
+				var posAy = vertices[0].y
+				var posAz = vertices[0].z
+
+				var posBx = vertices[1].x
+				var posBy = vertices[1].y
+				var posBz = vertices[1].z
+
+				var posCx = vertices[2].x
+				var posCy = vertices[2].y
+				var posCz = vertices[2].z
+				$('#textAx').val(posAx)
+				$('#textAy').val(posAy)
+				$('#textAz').val(posAz)
+				$('#textBx').val(posBx)
+				$('#textBy').val(posBy)
+				$('#textBz').val(posBz)
+				$('#textCx').val(posCx)
+				$('#textCy').val(posCy)
+				$('#textCz').val(posCz)
+					$('#vertexId1').val(vertexArr[index].a)
+					$('#vertexId2').val(vertexArr[index].b)
+					$('#vertexId3').val(vertexArr[index].c)
 					if(geometryArr[index].material.wireframe == false) {
-						geometryArr[index].material
+						console.log('1')
+						$('.highlight').html('高亮')
+						geometryArr[index].material = material1
 					} else {
+						console.log('2')
+						$('.highlight').html('取消高亮')
 						geometryArr[index].material = materialSelected
 					}
+					$('#WebGL-output').click
+
 				}
 			})
 			$('#WebGL-output').click(function(event) {

@@ -3,6 +3,7 @@
 
 	<head>
 		<title>obj test </title>
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script type="text/javascript" src="jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="libs/three.js"></script>
 		<script type="text/javascript" src="libs/OBJLoader.js"></script>
@@ -10,15 +11,27 @@
 		<script type="text/javascript" src="libs/OBJMTLLoader.js"></script>
 		<script type="text/javascript" src="libs/TGALoader.js"></script>
 		<script type="text/javascript" src="libs/TrackballControls.js"></script>
-		<!--<script src="dat.gui.js"></script>-->
-		<!--<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script>
-		<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script>
-		<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script>-->
 		<style>
 			body {
-				/* set margin to 0 and overflow to hidden, to go fullscreen */
 				margin: 0;
 				overflow: hidden;
+			}
+				.text {
+				position: absolute;
+				right: 10px;
+				top: 50px;
+				background: #fff;
+				z-index: 11111111;
+				padding: 20px;
+				border-radius: 5px;
+			}
+			
+			input {
+				width: 50px;
+				margin-top: 10px;
+				margin-right: 1px;
+				border: none;
+				border: 1px solid #ccc;
 			}
 		</style>
 	</head>
@@ -27,10 +40,17 @@
 		<div style="width:100%">
 			<div id="WebGL-output" style="width:80%;height:80%">
 			</div>
+			<div class="text" id="text">
+				<button  type="button" class="debugging btn btn-info">调试模式</button>
+				<button  type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
+			</div>
 		</div>
 		<script type="text/javascript">
 			$('.exit').click(function() {
-				window.history.back(-1);
+				window.location.href = 'http://99.48.68.95:8086/ObjManagement'
+			})
+			$('.debugging').click(function(){
+				window.location.href = 'http://99.48.68.95:8081/static/aphrodite.html'
 			})
 			var mesh;
 //			var sphere;
@@ -46,8 +66,8 @@
 			var camera;
 			function initCamera() {
 				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-				camera.position.x = 30;
-				camera.position.y = 100;
+				camera.position.x = 0;
+				camera.position.y = 0;
 				camera.position.z = -100;
 				camera.lookAt(scene.position);
 			}
@@ -62,10 +82,14 @@
 			}
 			var spotLight;
 			function initLight() {
-				spotLight = new THREE.DirectionalLight(0xC0C0C0);
-				spotLight.position.set(10, 10, -50);
+				spotLight = new THREE.DirectionalLight(0xF4BE9A);
+				spotLight.position.set(0, 0, -50);
 				spotLight.intensity = 3;
 				scene.add(spotLight);
+				 var light = new THREE.DirectionalLight(0xF4BE9A) //
+				 light.intensity = 3;
+          light.position.set(0, 0, 50);
+            scene.add(light);
 			}
 			let geometryArr = []
 			function initObject() {
@@ -92,7 +116,7 @@
 						var faces = child.geometry.faces;
 					});
 					loadedMesh.scale.set(1, 1, 1);
-					loadedMesh.position.set(0, -30, -30);
+					loadedMesh.position.set(0, -35, 0);
 					scene.add(loadedMesh)
 					var material = new THREE.PointCloudMaterial({
 						size: 1,
