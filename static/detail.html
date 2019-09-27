@@ -65,64 +65,52 @@
 			}
 			var camera;
 			function initCamera() {
-				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+				camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 				camera.position.x = 0;
-				camera.position.y = 0;
-				camera.position.z = -100;
+				camera.position.y = 600;
+				camera.position.z = 1000;
+				   camera.up.x = 0;
+                camera.up.y = 1;
+                camera.up.z = 0;
 				camera.lookAt(scene.position);
 			}
 			/* 控制器 */
 			var trackballControls;
 			function initControls() {
 				trackballControls = new THREE.TrackballControls(camera,webGLRenderer.domElement);
-				trackballControls.rotateSpeed = 0.5; //旋转速度
-				trackballControls.zoomSpeed = 0.5; // 缩放速度
-				trackballControls.panSpeed = 0.5; // 平controls
+				trackballControls.rotateSpeed = 1; //旋转速度
+				trackballControls.zoomSpeed = 1; // 缩放速度
+				trackballControls.panSpeed = 1; // 平controls
 				trackballControls.staticMoving = true; // 静止移动，为 true 则没有惯性
 			}
 			var spotLight;
 			function initLight() {
-				spotLight = new THREE.DirectionalLight(0xF4BE9A);
-				spotLight.position.set(0, 0, -50);
-				spotLight.intensity = 3;
+				spotLight = new THREE.DirectionalLight(0xffeedd,1);
+				spotLight.position.set(0, 0, 1);
 				scene.add(spotLight);
-				 var light = new THREE.DirectionalLight(0xF4BE9A) //
-				 light.intensity = 3;
-          light.position.set(0, 0, 50);
+				 var light = new THREE.DirectionalLight(0xffeedd,1) //
+          light.position.set(0, 0, -1);
             scene.add(light);
 			}
 			let geometryArr = []
-			function initObject() {
-				var material = new THREE.PointCloudMaterial({
-					size: 4,
-					vertexColors: false,
-					color: 0xff00ff
-				});
-				var index = 0;
-				var indexX;
-				var indexY;
-				var indexZ;
-				var loader = new THREE.OBJMTLLoader();
-				var materialSprite = new THREE.SpriteMaterial();
-				loader.load('meinumo.obj', 'meinumo.mtl', function(loadedMesh) {
-						var materialSprite = new THREE.SpriteMaterial();
-					var material = new THREE.MeshPhongMaterial({
-						color: 0x664324,
-						wireframe: false,
-					})
-					loadedMesh.children.forEach(function(child) {
-						child.material = material;
-						var color = new THREE.Color(0x444444);
-						var faces = child.geometry.faces;
-					});
-					loadedMesh.scale.set(1, 1, 1);
-					loadedMesh.position.set(0, -35, 0);
-					scene.add(loadedMesh)
-					var material = new THREE.PointCloudMaterial({
-						size: 1,
-						vertexColors: true,
-						color: 0xffffff
-					});
+					function initObject() {
+    		var loader = new THREE.OBJLoader();
+				loader.load('completeModel.obj', function(object) {
+			      object.traverse(function(child) {
+        //This allow us to check if the children is an instance of the Mesh constructor
+        if (child instanceof THREE.Mesh) {
+            child.material.color = new THREE.Color(0xffffff);
+            //Sometimes there are some vertex normals missing in the .obj files, ThreeJs will compute them
+            child.geometry.computeVertexNormals();
+        }
+    });
+					//object.scale.x =  object.scale.y =  object.scale.z = 1
+					object.updateMatrix();
+					object.position.x = 0;
+					object.position.y = -1100;
+					object.position.z = 0;
+					console.log(object.position)
+					scene.add(object);
 				});
 			}
 
@@ -146,9 +134,6 @@
 				initObject();
 				initControls();
 				window.addEventListener("resize", onWindowResize, false);
-				trackballControls.addEventListener('change', function() {
-					console.log("相机动了！");
-				});
 				render();
 			}
 			function render() {
