@@ -6,22 +6,15 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script type="text/javascript" src="jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="libs/three.js"></script>
-		<script type="text/javascript" src="libs/OBJLoader.js"></script>
-		<script type="text/javascript" src="libs/MTLLoader.js"></script>
-		<script type="text/javascript" src="libs/OBJMTLLoader.js"></script>
-		<script type="text/javascript" src="libs/TGALoader.js"></script>
 		<script type="text/javascript" src="libs/TrackballControls.js"></script>
-		<!--<script src="dat.gui.js"></script>-->
-		<!--<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script>
-		<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script>
-		<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script>-->
+		<script type="text/javascript" src="libs/OBJLoader.js"></script>
+		<script type="text/javascript" src="libs/OBJMTLLoader.js"></script>
 		<style>
 			body {
 				/* set margin to 0 and overflow to hidden, to go fullscreen */
 				margin: 0;
 				overflow: hidden;
 			}
-			
 			.text {
 				position: absolute;
 				right: 10px;
@@ -39,7 +32,6 @@
 				border: none;
 				border: 1px solid #ccc;
 			}
-			
 			.wrapper {
 				width: 100%;
 				height: 100%;
@@ -79,12 +71,14 @@
 			.detail {
 				width: 100px;
 			}
-			.form-control{
+			
+			.form-control {
 				display: inline-block;
-				width:70px;
+				width: 70px;
 			}
-			.txt{
-				width:90px;
+			
+			.txt {
+				width: 90px;
 				display: inline-block;
 				font-weight: bold;
 			}
@@ -96,15 +90,20 @@
 			<div id="WebGL-output" style="width:80%;height:80%">
 			</div>
 			<div class="text" id="text">
-				<button  type="button" class="detail btn btn-info">详情模式</button>
-				<div><div class="txt">平面index</div><input type="text" class="form-control" id="indexId" /></div>
-				<div><div class="txt">平面顶点index</div><input type="text"  class="form-control" disabled id="vertexId1" /><input  class="form-control" type="text" disabled id="vertexId2" /><input  class="form-control" type="text" disabled id="vertexId3" /></div>
-				<div><div class="txt">平面顶点坐标A</div><input  class="form-control" type="text" id="textAx" disabled/><input type="text"  class="form-control" id="textAy" disabled/><input type="text"  class="form-control" id="textAz" disabled/></div>
-				<div><div class="txt">平面顶点坐标B</div><input  class="form-control" type="text" id="textBx" disabled/><input type="text"  class="form-control" id="textBy" disabled/><input type="text"  class="form-control" id="textBz" disabled/></div>
-				<div><div class="txt">平面顶点坐标C</div><input  class="form-control" type="text" id="textCx" disabled/><input type="text"  class="form-control" id="textCy" disabled/><input type="text"  class="form-control" id="textCz" disabled/></div>
-				<button  type="button" class="highlight btn btn-primary">高亮</button>
-			<!--	<button class="positioning btn">定位</button>-->
-				<button  type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
+				<button type="button" class="detail btn btn-info">详情模式</button>
+				<div>
+					<div class="txt">平面index</div><input type="text" class="form-control" id="indexId" /></div>
+				<div>
+					<div class="txt">平面顶点index</div><input type="text" class="form-control" disabled id="vertexId1" /><input class="form-control" type="text" disabled id="vertexId2" /><input class="form-control" type="text" disabled id="vertexId3" /></div>
+				<div>
+					<div class="txt">平面顶点坐标A</div><input class="form-control" type="text" id="textAx" disabled/><input type="text" class="form-control" id="textAy" disabled/><input type="text" class="form-control" id="textAz" disabled/></div>
+				<div>
+					<div class="txt">平面顶点坐标B</div><input class="form-control" type="text" id="textBx" disabled/><input type="text" class="form-control" id="textBy" disabled/><input type="text" class="form-control" id="textBz" disabled/></div>
+				<div>
+					<div class="txt">平面顶点坐标C</div><input class="form-control" type="text" id="textCx" disabled/><input type="text" class="form-control" id="textCy" disabled/><input type="text" class="form-control" id="textCz" disabled/></div>
+				<button type="button" class="highlight btn btn-primary">高亮</button>
+				<!--	<button class="positioning btn">定位</button>-->
+				<button type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
 			</div>
 			<div class="wrapper">
 				<div class="box">
@@ -116,7 +115,7 @@
 		<!-- Javascript code that runs our Three.js examples -->
 		<script type="text/javascript">
 			$('.exit').click(function() {
-			window.location.href = 'http://99.48.68.95:8086/ObjManagement'
+				window.location.href = 'http://99.48.68.95:8086/ObjManagement'
 			})
 			$('.confirmBtn').click(function() {
 				$('.wrapper').toggle()
@@ -125,11 +124,9 @@
 				window.location.href = 'detail.html'
 			})
 			var mesh;
-			//			var sphere;
 			var geoms = [];
 			var textMesh;
 			var webGLRenderer;
-
 			function initThree() {
 				webGLRenderer = new THREE.WebGLRenderer();
 				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -137,160 +134,130 @@
 				document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 			}
 			var camera;
-
 			function initCamera() {
-				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+				camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
 				camera.position.x = 0;
 				camera.position.y = 0;
-				camera.position.z = 100;
+				camera.position.z = 1000;
 				camera.lookAt(scene.position);
 			}
 			/* 控制器 */
 			var trackballControls;
-
 			function initControls() {
 				trackballControls = new THREE.TrackballControls(camera, webGLRenderer.domElement);
-				trackballControls.rotateSpeed = 0.5; //旋转速度
-				trackballControls.zoomSpeed = 0.5; // 缩放速度
-				trackballControls.panSpeed = 0.5; // 平controls
+				trackballControls.rotateSpeed = 1; //旋转速度
+				trackballControls.zoomSpeed = 1; // 缩放速度
+				trackballControls.panSpeed = 1; // 平controls
 				trackballControls.staticMoving = true; // 静止移动，为 true 则没有惯性
 			}
 			var spotLight;
-
 			function initLight() {
 				spotLight = new THREE.DirectionalLight(0xC0C0C0);
 				spotLight.position.set(0, 0, -50);
 				spotLight.intensity = 3;
 				scene.add(spotLight);
-				 var light = new THREE.DirectionalLight(0xC0C0C0) //
-				 light.intensity = 3;
-          light.position.set(0, 0, 50);
-            scene.add(light);
+				var light = new THREE.DirectionalLight(0xC0C0C0) //
+				light.intensity = 3;
+				light.position.set(0, 0, 50);
+				scene.add(light);
 			}
 			let geometryArr = []
 			let vertexArr = []
-
+			let faceArr = []
+			var result = []
+			var onProgress = function(xhr) {
+			};
+			var onError = function(xhr) {};
 			function initObject() {
-				var material = new THREE.PointCloudMaterial({
-					size: 4,
-					vertexColors: false,
-					color: 0xff00ff
-				});
+				var material = new THREE.MeshPhongMaterial({
+					color: 0x664324,
+					wireframe: true
+				})
 				var index = 0;
 				var indexX;
 				var indexY;
 				var indexZ;
-				var loader = new THREE.OBJMTLLoader();
-				var materialSprite = new THREE.SpriteMaterial();
-				loader.load('meinumo.obj', 'meinumo.mtl', function(loadedMesh) {
-					var materialSprite = new THREE.SpriteMaterial();
+				var objLoader = new THREE.OBJLoader();
+				objLoader.load('completeModel.obj', function(object) {
+					console.log(object)
 					var material = new THREE.MeshPhongMaterial({
-						color: 0x664324,
-						wireframe: false,
-					})
-					loadedMesh.children.forEach(function(child) {
-						child.material = material;
-						var color = new THREE.Color(0x444444);
-						var faces = child.geometry.faces;
-
-						faces.forEach(function(face) {
-//							console.log(face)
-							vertexArr.push(face)
-							let v1 = child.geometry.vertices[face.a];
-							let v2 = child.geometry.vertices[face.b];
-							let v3 = child.geometry.vertices[face.c];
-							let material = new THREE.MeshPhongMaterial({
-								color: 0x008000, //3D线条颜色
-								wireframe: true,
-							});
-							let faceGeometry = new THREE.Geometry();
-							faceGeometry.vertices.push(new THREE.Vector3(v1.x, v1.y, v1.z));
-							faceGeometry.vertices.push(new THREE.Vector3(v2.x, v2.y, v2.z));
-							faceGeometry.vertices.push(new THREE.Vector3(v3.x, v3.y, v3.z));
-							let face3 = new THREE.Face3(0, 1, 2, face.normal, 0x808080, 0);
-							faceGeometry.faces.push(face3);
-							faceGeometry.computeFaceNormals();
-							faceGeometry.computeVertexNormals();
-							let faceMesh = new THREE.Mesh(faceGeometry, material);
-							geometryArr.push(faceMesh)
-							faceMesh.position.y = -35;
-							scene.add(faceMesh);
-
-						});
-					});
-					mesh = loadedMesh
-				});
-			}
-
-			var flag = 1
-
-			function onDocumentMouseDown(event) {
-				//新建一个三维单位向量 假设z方向就是0.5
-				//根据照相机，把这个向量转换到视点坐标系
-				//这里定义深度值为0.5，深度值越大，意味着精度越高
-				var vector;
-				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-				vector = vector.unproject(camera)
-				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
-				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-				var intersects = raycaster.intersectObjects(scene.children);
-				if(intersects.length > 0) {
-					var selected = intersects[0]; //取第一个物体
-					let materialSelected = new THREE.MeshPhongMaterial({
-						color: 0xFF0000,
-						wireframe: false,
-					});
-					let material1 = new THREE.MeshPhongMaterial({
-						color: 0x008000, //3D线条颜色
+						color: 0x008000,
 						wireframe: true,
+					})
+					object.children.forEach(function(child) {
+						vertexArr = child.geometry.attributes.position.array
+						console.log(child.geometry.attributes.position.array[0])
+						console.log(child.geometry.attributes.position.count)
+						child.material = material;
 					});
-					if(intersects[0].object.material.wireframe == false) {
-						intersects[0].object.material = material1
-						$('.highlight').html('高亮')
-					} else {
-						$('.highlight').html('取消高亮')
-						
-						intersects[0].object.material = materialSelected;
+					for(var i=0;i<vertexArr.length;i+=3){
+					    result.push(vertexArr.slice(i,i+3));
 					}
-					for(var i = 0; i < geometryArr.length; i++) {
-						if(intersects[0].object.material.uuid == geometryArr[i].material.uuid) {
-							$('#indexId').val(i)
-							$('#vertexId1').val(vertexArr[i].a)
-							$('#vertexId2').val(vertexArr[i].b)
-							$('#vertexId3').val(vertexArr[i].c)
-						}
-					}
-					var vertices = intersects[0].object.geometry.vertices;
-					scene.remove(textMesh);
-					var posAx = vertices[0].x
-					var posAy = vertices[0].y
-					var posAz = vertices[0].z
-
-					var posBx = vertices[1].x
-					var posBy = vertices[1].y
-					var posBz = vertices[1].z
-
-					var posCx = vertices[2].x
-					var posCy = vertices[2].y
-					var posCz = vertices[2].z
-					$('#textAx').val(posAx)
-					$('#textAy').val(posAy)
-					$('#textAz').val(posAz)
-					$('#textBx').val(posBx)
-					$('#textBy').val(posBy)
-					$('#textBz').val(posBz)
-					$('#textCx').val(posCx)
-					$('#textCy').val(posCy)
-					$('#textCz').val(posCz)
+					console.log(result)
+					console.log(object)
+					object.position.y = -1000;
+					scene.add(object);
+				}, onProgress, onError);
+			}
+			let raycaster = new THREE.Raycaster();
+			let mouse = new THREE.Vector2();
+			function onDocumentMouseDown(event) {
+				let sphereMesh = scene.children[2].children[0]
+				mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+				mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+				raycaster.setFromCamera(mouse, camera);
+				let intersects = raycaster.intersectObject(scene.children[2].children[0]);
+				console.log(intersects)
+				if(intersects.length > 0) {
+					let intersect = intersects[0];
+					let face = intersect.face;
+					console.log(face)
+					//通过面的三个点索引值找到顶点坐标
+					console.log(face.a)
+					console.log(face.b)
+					console.log(face.c)
+					$('#vertexId1').val(face.a)
+					$('#vertexId2').val(face.b)
+					$('#vertexId3').val(face.c)
+					$('#indexId').val(intersects[0].faceIndex)
+					console.log(sphereMesh.geometry.attributes.position)
+					let v1 = result[face.a];
+					let v2 = result[face.b];
+					let v3 = result[face.c];
+					$('#textAx').val(v1[0])
+					$('#textAy').val(v1[1])
+					$('#textAz').val(v1[2])
+					$('#textBx').val(v2[0])
+					$('#textBy').val(v2[1])
+					$('#textBz').val(v2[2])
+					$('#textCx').val(v3[0])
+					$('#textCy').val(v3[1])
+					$('#textCz').val(v3[2])
+					let materialSelected = new THREE.MeshPhongMaterial({
+					color: 0xFF0000,
+					wireframe: false,
+				});
+					let faceGeometry = new THREE.Geometry();
+					faceGeometry.vertices.push(new THREE.Vector3(v1[0], v1[1], v1[2]));
+					faceGeometry.vertices.push(new THREE.Vector3(v2[0], v2[1], v2[2]));
+					faceGeometry.vertices.push(new THREE.Vector3(v3[0], v3[1], v3[2]));
+					console.log(faceGeometry)
+					let face3 = new THREE.Face3(0, 1, 2, face.normal, 0xFF0000, 0);
+					faceGeometry.faces.push(face3);
+					faceGeometry.computeFaceNormals();
+					faceGeometry.computeVertexNormals();
+					let faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+					faceMesh.position.y = -1000;
+					console.log(faceMesh)
+					scene.add(faceMesh);
+					
 				}
 			}
-
 			function onTextDocumentMouseDown(event) {
 				$(event.target).focus()
 			}
 			var scene;
 			var clock;
-
 			function initScene() {
 				clock = new THREE.Clock();
 				scene = new THREE.Scene();
@@ -302,7 +269,6 @@
 				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
 				render();
 			}
-
 			function init() {
 				initThree();
 				initScene();
@@ -324,46 +290,6 @@
 				requestAnimationFrame(render);
 				webGLRenderer.render(scene, camera);
 			}
-			var factor = 50 //每次放大的倍数
-			$('.positioning').click(function() {
-				let index = parseFloat($('#indexId').val())
-				var vertices = geometryArr[index].geometry.vertices;
-				scene.remove(textMesh);
-				var posAx = vertices[0].x
-				var posAy = vertices[0].y
-				var posAz = vertices[0].z
-
-				var posBx = vertices[1].x
-				var posBy = vertices[1].y
-				var posBz = vertices[1].z
-
-				var posCx = vertices[2].x
-				var posCy = vertices[2].y
-				var posCz = vertices[2].z
-				$('#textAx').val(posAx)
-				$('#textAy').val(posAy)
-				$('#textAz').val(posAz)
-				$('#textBx').val(posBx)
-				$('#textBy').val(posBy)
-				$('#textBz').val(posBz)
-				$('#textCx').val(posCx)
-				$('#textCy').val(posCy)
-				$('#textCz').val(posCz)
-				//var vector = new THREE.Vector3((posAx+posBx+posCx)/3,(posAy+posBy+posCy)/3,(posAz+posBz+posCz))
-				let vector = mesh.position.clone().project(camera);
-				vector.sub(camera.position).normalize();
-				console.log(vector)
-				camera.position.x += vector.x * factor;
-				camera.position.y += vector.y * factor;
-				camera.position.z += vector.z * factor;
-				console.log(camera.position)
-				trackballControls.target.x += vector.x * factor;
-				trackballControls.target.y += vector.y * factor;
-				trackballControls.target.z += vector.z * factor;
-				console.log(trackballControls.target)
-
-			})
-			let flag1 = 1
 			$('.highlight').click(function() {
 				let materialSelected = new THREE.MeshPhongMaterial({
 					color: 0xFF0000,
@@ -380,26 +306,26 @@
 				} else {
 					console.log(geometryArr[index].geometry.vertices)
 					var vertices = geometryArr[index].geometry.vertices;
-						var posAx = vertices[0].x
-				var posAy = vertices[0].y
-				var posAz = vertices[0].z
+					var posAx = vertices[0].x
+					var posAy = vertices[0].y
+					var posAz = vertices[0].z
 
-				var posBx = vertices[1].x
-				var posBy = vertices[1].y
-				var posBz = vertices[1].z
+					var posBx = vertices[1].x
+					var posBy = vertices[1].y
+					var posBz = vertices[1].z
 
-				var posCx = vertices[2].x
-				var posCy = vertices[2].y
-				var posCz = vertices[2].z
-				$('#textAx').val(posAx)
-				$('#textAy').val(posAy)
-				$('#textAz').val(posAz)
-				$('#textBx').val(posBx)
-				$('#textBy').val(posBy)
-				$('#textBz').val(posBz)
-				$('#textCx').val(posCx)
-				$('#textCy').val(posCy)
-				$('#textCz').val(posCz)
+					var posCx = vertices[2].x
+					var posCy = vertices[2].y
+					var posCz = vertices[2].z
+					$('#textAx').val(posAx)
+					$('#textAy').val(posAy)
+					$('#textAz').val(posAz)
+					$('#textBx').val(posBx)
+					$('#textBy').val(posBy)
+					$('#textBz').val(posBz)
+					$('#textCx').val(posCx)
+					$('#textCy').val(posCy)
+					$('#textCz').val(posCz)
 					$('#vertexId1').val(vertexArr[index].a)
 					$('#vertexId2').val(vertexArr[index].b)
 					$('#vertexId3').val(vertexArr[index].c)
