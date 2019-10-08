@@ -95,25 +95,38 @@
 			},
 			deleteObj(){
 				let req = {
-					fileUrl:this.fileUrl
+					name:this.fileUrl
 				}
-				api.post(api.getUrl('upload'), req).then(res => {
-					console.log('res')
-					if(res.code == '0000') {
-						Message({
-							showClose: true,
-							type: 'success',
-							message: '删除成功'
+				this.$confirm('确认要删除吗?', '提示', {
+					confirmButtonText: '确定',
+					cancelButtonText: '取消',
+					type: ''
+				}).then(() => {
+					console.log('删除')
+						api.post(api.getUrl('deleteFile'), req).then(res => {
+							console.log('res')
+							if(res.code == '0000') {
+								Message({
+									showClose: true,
+									type: 'success',
+									message: '删除成功'
+								})
+								this.fileUrl = res.content
+							} else {
+								Message({
+									showClose: true,
+									type: 'error',
+									message: '删除失败'
+								})
+							}
 						})
-						this.fileUrl = res.content
-					} else {
-						Message({
-							showClose: true,
-							type: 'error',
-							message: '上传失败'
-						})
-					}
-				})
+				}).catch(() => {
+					this.$message({
+						type: 'info',
+						message: '已取消删除'
+					});
+				});
+				
 			},
 			importExport(file) {
 				this.formData = new FormData()
@@ -182,7 +195,18 @@
 				this.buildId = rows.id
 				this.buildShow = true
 				this.baseBuild = false
-				window.location.href= 'http://99.48.68.95:8081/static/aphrodite.html'
+				this.id = rows.id
+				let req = {
+					id: rows.id
+				}
+				api.post(api.getUrl('getObjDetail'), req).then(res => {
+					if(res.code == '0000'){
+						window.location.href= 'http://99.48.68.95:8080/aphrodite.html?obj='+res.content.fileUrl
+					}
+				}).catch(() => {
+					console.log("系统异常")
+				})
+				
 			},
 			onCancle() {
 				this.boxShow = false

@@ -79,12 +79,14 @@
 			.detail {
 				width: 100px;
 			}
-			.form-control{
+			
+			.form-control {
 				display: inline-block;
-				width:70px;
+				width: 70px;
 			}
-			.txt{
-				width:90px;
+			
+			.txt {
+				width: 90px;
 				display: inline-block;
 				font-weight: bold;
 			}
@@ -122,12 +124,15 @@
 		<!-- Javascript code that runs our Three.js examples -->
 		<script type="text/javascript">
 			$('.exit').click(function() {
-			window.location.href = 'http://99.48.68.95:8086/ObjManagement'
+				window.location.href = 'http://99.48.68.95:8086/ObjManagement'
 			})
 			$('.confirmBtn').click(function() {
 				$('.wrapper').toggle()
 			})
 			$('.detail').click(function() {
+				if(faceMesh) {
+					scene.remove(faceMesh);
+				}
 				if($('.detail').html() == '详情模式') {
 					$('.debugging').hide()
 					$('.detail').html('调试模式')
@@ -139,11 +144,9 @@
 				}
 			})
 			var mesh;
-			//			var sphere;
 			var geoms = [];
 			var textMesh;
 			var webGLRenderer;
-
 			function initThree() {
 				webGLRenderer = new THREE.WebGLRenderer();
 				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -151,9 +154,8 @@
 				document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 			}
 			var camera;
-
 			function initCamera() {
-				camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10000);
+				camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10000);
 				camera.position.x = 0;
 				camera.position.y = 0;
 				camera.position.z = 1000;
@@ -161,7 +163,6 @@
 			}
 			/* 控制器 */
 			var trackballControls;
-
 			function initControls() {
 				trackballControls = new THREE.TrackballControls(camera, webGLRenderer.domElement);
 				trackballControls.rotateSpeed = 1; //旋转速度
@@ -176,14 +177,13 @@
 				spotLight.position.set(0, 0, -50);
 				spotLight.intensity = 3;
 				scene.add(spotLight);
-				 var light = new THREE.DirectionalLight(0xC0C0C0) //
-				 light.intensity = 3;
-          light.position.set(0, 0, 50);
-            scene.add(light);
+				var light = new THREE.DirectionalLight(0xC0C0C0) //
+				light.intensity = 3;
+				light.position.set(0, 0, 50);
+				scene.add(light);
 			}
 			let geometryArr = []
 			let vertexArr = []
-
 			function initObject() {
 				scene.remove(mesh);
 				var material = new THREE.PointCloudMaterial({
@@ -198,7 +198,6 @@
 				var loader = new THREE.OBJMTLLoader();
 				var materialSprite = new THREE.SpriteMaterial();
 				loader.load('completeModel.obj', 'meinumo.mtl', function(loadedMesh) {
-					console.log(loadedMesh)
 					var materialSprite = new THREE.SpriteMaterial();
 					var material = new THREE.MeshPhongMaterial({
 						color: 0x664324,
@@ -212,8 +211,8 @@
 					scene.add(mesh);
 				});
 			}
-	function initObjectDetail() {
-				console.log('initObjectDetail')
+
+			function initObjectDetail() {
 				scene.remove(mesh);
 				var material = new THREE.PointCloudMaterial({
 					size: 4,
@@ -227,7 +226,6 @@
 				var loader = new THREE.OBJMTLLoader();
 				var materialSprite = new THREE.SpriteMaterial();
 				loader.load('completeModel.obj', 'meinumo.mtl', function(loadedMesh) {
-					console.log(loadedMesh)
 					var materialSprite = new THREE.SpriteMaterial();
 					var material = new THREE.MeshPhongMaterial({
 						color: 0x664324,
@@ -242,6 +240,7 @@
 				});
 			}
 			var flag = 1
+			let faceMesh
 
 			function onDocumentMouseDown(event) {
 				//新建一个三维单位向量 假设z方向就是0.5
@@ -253,41 +252,30 @@
 				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
 				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 				var intersects = raycaster.intersectObjects(scene.children[2].children);
-				console.log(scene.children[2])
-				console.log(intersects)
 				if(intersects.length > 0) {
-					   let intersect = intersects[0];
-            let face = intersect.face;
-            console.log(face.a)
-            console.log(face.b)
-            console.log(face.c)
-            console.log(scene.children[2].children[0]);//将选中的三角面信息打印到控制台
-            //通过面的三个点索引值找到顶点坐标
-            let v1 = scene.children[2].children[0].geometry.vertices[face.a];
-            let v2 = scene.children[2].children[0].geometry.vertices[face.b];
-            let v3 = scene.children[2].children[0].geometry.vertices[face.c];
- 			console.log(v1)
-					
-            //显示三角面
-          	let materialSelected = new THREE.MeshPhongMaterial({
+					let intersect = intersects[0];
+					let face = intersect.face;
+					//通过面的三个点索引值找到顶点坐标
+					let v1 = scene.children[2].children[0].geometry.vertices[face.a];
+					let v2 = scene.children[2].children[0].geometry.vertices[face.b];
+					let v3 = scene.children[2].children[0].geometry.vertices[face.c];
+					//显示三角面
+					let materialSelected = new THREE.MeshPhongMaterial({
 						color: 0xFF0000,
 						wireframe: false,
 					});
-            let faceGeometry = new THREE.Geometry();
-            faceGeometry.vertices.push(new THREE.Vector3(v1.x, v1.y, v1.z));
-            faceGeometry.vertices.push(new THREE.Vector3(v2.x, v2.y, v2.z));
-            faceGeometry.vertices.push(new THREE.Vector3(v3.x, v3.y, v3.z));
- 			console.log(faceGeometry)
-            let face3 = new THREE.Face3(0, 1, 2, face.normal, 0x00cc00, 0);
-            console.log(faceGeometry)
-            faceGeometry.faces.push(face3);
-            faceGeometry.computeFaceNormals();
-            faceGeometry.computeVertexNormals();
-            let faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-            console.log(faceMesh)
-            faceMesh.position.y = -1200;
-            scene.add(faceMesh);
-            $('#vertexId1').val(face.a)
+					let faceGeometry = new THREE.Geometry();
+					faceGeometry.vertices.push(new THREE.Vector3(v1.x, v1.y, v1.z));
+					faceGeometry.vertices.push(new THREE.Vector3(v2.x, v2.y, v2.z));
+					faceGeometry.vertices.push(new THREE.Vector3(v3.x, v3.y, v3.z));
+					let face3 = new THREE.Face3(0, 1, 2, face.normal, 0x00cc00, 0);
+					faceGeometry.faces.push(face3);
+					faceGeometry.computeFaceNormals();
+					faceGeometry.computeVertexNormals();
+					faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+					faceMesh.position.y = -1200;
+					scene.add(faceMesh);
+					$('#vertexId1').val(face.a)
 					$('#vertexId2').val(face.b)
 					$('#vertexId3').val(face.c)
 					$('#indexId').val(intersects[0].faceIndex)
@@ -329,12 +317,11 @@
 				initObject();
 				initControls();
 				window.addEventListener("resize", onWindowResize, false);
-				trackballControls.addEventListener('change', function(e) {
-					console.log(e);
-				});
+//				trackballControls.addEventListener('change', function(e) {
+//					console.log(e);
+//				});
 				render();
 			}
-
 			function render() {
 				var delta = clock.getDelta();
 				trackballControls.update(delta);
@@ -346,7 +333,7 @@
 			$('.highlight').click(function() {
 				geometryArr = scene.children[2].children[0].geometry.faces
 				verticesArr = scene.children[2].children[0].geometry.vertices
-			let materialSelected = new THREE.MeshPhongMaterial({
+				let materialSelected = new THREE.MeshPhongMaterial({
 					color: 0xFF0000,
 					wireframe: false,
 				});
@@ -355,18 +342,16 @@
 					wireframe: true,
 				});
 				let index = parseFloat($('#indexId').val())
-				console.log(index)
 				if(!index) {
 					$('.wrapper').show()
 				} else {
-					    let v1 = geometryArr[index].a;
-            			let v2 = geometryArr[index].b;
-            			let v3 = geometryArr[index].c;
-					console.log(v1)
+					let v1 = geometryArr[index].a;
+					let v2 = geometryArr[index].b;
+					let v3 = geometryArr[index].c;
 					let faceGeometry = new THREE.Geometry();
-					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v1].x,verticesArr[v1].y, verticesArr[v1].z));
-					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v2].x,verticesArr[v2].y, verticesArr[v2].z));
-					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v3].x,verticesArr[v3].y, verticesArr[v3].z));
+					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v1].x, verticesArr[v1].y, verticesArr[v1].z));
+					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v2].x, verticesArr[v2].y, verticesArr[v2].z));
+					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v3].x, verticesArr[v3].y, verticesArr[v3].z));
 					let face3 = new THREE.Face3(0, 1, 2, 0xFF0000, 0);
 					faceGeometry.faces.push(face3);
 					faceGeometry.computeFaceNormals();
@@ -386,17 +371,17 @@
 					$('#textCx').val(verticesArr[v3].x)
 					$('#textCy').val(verticesArr[v3].y)
 					$('#textCz').val(verticesArr[v3].z)
-//					console.log(faceMesh)
-//					if(faceMesh.material.wireframe == false) {
-//						console.log('1')
-//						$('.highlight').html('高亮')
-//						faceMesh.material = material1
-//					} else {
-//						console.log('2')
-//						$('.highlight').html('取消高亮')
-//						faceMesh.material = materialSelected
-//					}
-				
+		//					console.log(faceMesh)
+		//					if(faceMesh.material.wireframe == false) {
+		//						console.log('1')
+		//						$('.highlight').html('高亮')
+		//						faceMesh.material = material1
+		//					} else {
+		//						console.log('2')
+		//						$('.highlight').html('取消高亮')
+		//						faceMesh.material = materialSelected
+		//					}
+
 				}
 			})
 			$('#WebGL-output').click(function(event) {

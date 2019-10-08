@@ -5,10 +5,16 @@
 		<title>obj test </title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script type="text/javascript" src="jquery-1.12.4.js"></script>
-		<script type="text/javascript" src="libs/three.js"></script>
-		<script type="text/javascript" src="libs/TrackballControls.js"></script>
+		<script type="text/javascript" src="libs/three1.js"></script>
 		<script type="text/javascript" src="libs/OBJLoader.js"></script>
-		<script type="text/javascript" src="libs/OBJMTLLoader.js"></script>
+		<script type="text/javascript" src="libs/MTLLoader.js"></script>
+		<script type="text/javascript" src="libs/OBJMTLoader.js"></script>
+		<script type="text/javascript" src="libs/TGALoader.js"></script>
+		<script type="text/javascript" src="libs/TrackballControls.js"></script>
+		<!--<script src="dat.gui.js"></script>-->
+		<!--<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script>
+		<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script>
+		<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script>-->
 		<style>
 			body {
 				/* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -111,7 +117,7 @@
 			<div class="wrapper">
 				<div class="box">
 					<div class="title">您没有填入index</div>
-					<button class="btn confirmBtn">确定</button>
+					<button class="btn btn-primary confirmBtn">确定</button>
 				</div>
 			</div>
 		</div>
@@ -123,8 +129,10 @@
 			$('.confirmBtn').click(function() {
 				$('.wrapper').toggle()
 			})
-			var flag = 1;
 			$('.detail').click(function() {
+				if(faceMesh) {
+					scene.remove(faceMesh);
+				}
 				if($('.detail').html() == '详情模式') {
 					$('.debugging').hide()
 					$('.detail').html('调试模式')
@@ -141,9 +149,7 @@
 			var webGLRenderer;
 
 			function initThree() {
-				webGLRenderer = new THREE.WebGLRenderer({
-					antialias: true
-				});
+				webGLRenderer = new THREE.WebGLRenderer();
 				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
 				webGLRenderer.setClearColor(0x008080);
 				document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
@@ -151,7 +157,7 @@
 			var camera;
 
 			function initCamera() {
-				camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+				camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 10000);
 				camera.position.x = 0;
 				camera.position.y = 0;
 				camera.position.z = 1000;
@@ -169,6 +175,15 @@
 			}
 			var spotLight;
 
+			function getQueryString(key) {
+				let hashSearch = window.location.href.split('?')[1]
+				let reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)")
+				if(hashSearch) {
+					let result = hashSearch.match(reg)
+					return result ? decodeURIComponent(result[2]) : null
+				}
+			}
+
 			function initLight() {
 				spotLight = new THREE.DirectionalLight(0xC0C0C0);
 				spotLight.position.set(0, 0, -50);
@@ -179,110 +194,163 @@
 				light.position.set(0, 0, 50);
 				scene.add(light);
 			}
+			let geometryArr = []
 			let vertexArr = []
-			var result = []
-			var onProgress = function(xhr) {};
-			var onError = function(xhr) {};
-			var material
 
 			function initObject() {
 				scene.remove(mesh);
-				scene.remove(faceMesh);
-				var objLoader = new THREE.OBJLoader();
-				objLoader.load('completeModel.obj', function(object) {
-						console.log(object)
-					material = new THREE.MeshPhongMaterial({
-						color: 0X707070,
-						wireframe: true
+				var material = new THREE.PointCloudMaterial({
+					size: 4,
+					vertexColors: false,
+					color: 0xff00ff
+				});
+				var loader = new THREE.OBJMTLLoader();
+				var materialSprite = new THREE.SpriteMaterial();
+				loader.load('completeModel.obj', 'meinumo.mtl', function(loadedMesh) {
+					var materialSprite = new THREE.SpriteMaterial();
+					var material = new THREE.MeshPhongMaterial({
+						color: 0x664324,
+						wireframe: true,
 					})
-					object.children.forEach(function(child) {
-						vertexArr = child.geometry.attributes.position.array
+					loadedMesh.children.forEach(function(child) {
 						child.material = material;
 					});
-					for(var i = 0; i < vertexArr.length; i += 3) {
-						result.push(vertexArr.slice(i, i + 3));
-					}
-					console.log(result)
-					object.position.y = -1200;
-					mesh = object
+					loadedMesh.position.y = -1200;
+					mesh = loadedMesh
 					scene.add(mesh);
-				}, onProgress, onError);
+				});
 			}
 
 			function initObjectDetail() {
-				console.log('initObjectDetail')
 				scene.remove(mesh);
-				var objLoader = new THREE.OBJLoader();
-				objLoader.load('completeModel.obj', function(object) {
-					material = new THREE.MeshPhongMaterial({
-						color: 0X707070,
-						wireframe: false
+				var material = new THREE.PointCloudMaterial({
+					size: 4,
+					vertexColors: false,
+					color: 0xff00ff
+				});
+				var loader = new THREE.OBJMTLLoader();
+				var materialSprite = new THREE.SpriteMaterial();
+				loader.load(obj, 'meinumo.mtl', function(loadedMesh) {
+					var materialSprite = new THREE.SpriteMaterial();
+					var material = new THREE.MeshPhongMaterial({
+						color: 0x664324,
+						wireframe: false,
 					})
-					object.children.forEach(function(child) {
-						vertexArr = child.geometry.attributes.position.array
+					loadedMesh.children.forEach(function(child) {
 						child.material = material;
 					});
-					for(var i = 0; i < vertexArr.length; i += 3) {
-						result.push(vertexArr.slice(i, i + 3));
-					}
-					object.position.y = -1200;
-					mesh = object
+					loadedMesh.position.y = -1200;
+					mesh = loadedMesh
 					scene.add(mesh);
-				}, onProgress, onError);
+				});
 			}
-			let raycaster = new THREE.Raycaster();
-			let mouse = new THREE.Vector2();
-			let faceMesh;
-			let clickArr = []
+			// 验证重复元素，有重复返回true；否则返回false
+			function isRepeat(arr) {
+				var hash = {};
+				for(var i in arr) {
+					if(hash[arr[i]]) {
+						return true;
+					}
+					// 不存在该元素，则赋值为true，可以赋任意值，相应的修改if判断条件即可
+					hash[arr[i]] = true;
+				}
+				return false;
+			}
+
+			//删除指定元素
+			function removeByValue(arr, val) {
+				for(var i = 0; i < arr.length; i++) {
+					if(arr[i] == val) {
+						arr.splice(i, 1);
+						break;
+					}
+				}
+			}
+			let faceMesh
+			let selectArr = []
 
 			function onDocumentMouseDown(event) {
-				let sphereMesh = scene.children[2].children[0]
-				mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-				mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-				raycaster.setFromCamera(mouse, camera);
-				let intersects = raycaster.intersectObject(scene.children[2].children[0]);
+				//新建一个三维单位向量 假设z方向就是0.5
+				//根据照相机，把这个向量转换到视点坐标系
+				//这里定义深度值为0.5，深度值越大，意味着精度越高
+				var vector;
+				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+				vector = vector.unproject(camera)
+				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
+				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+				var intersects = raycaster.intersectObjects(scene.children[2].children);
 				if(intersects.length > 0) {
 					let intersect = intersects[0];
+					console.log(intersect)
 					let face = intersect.face;
-					console.log(intersects[0].faceIndex)
 					//通过面的三个点索引值找到顶点坐标
+					let v1 = scene.children[2].children[0].geometry.vertices[face.a];
+					let v2 = scene.children[2].children[0].geometry.vertices[face.b];
+					let v3 = scene.children[2].children[0].geometry.vertices[face.c];
+					selectArr.push(intersects[0].faceIndex)
+					const obj = {}
+					const newObjArr = []
+					for(let i = 0; i < selectArr.length; i++) {
+						if(!obj[selectArr[i]]) {
+							newObjArr.push(selectArr[i]);
+							obj[selectArr[i]] = true
+						} else {
+							//删除重复的那个元素得到新数组
+							removeByValue(newObjArr, selectArr[i]);
+						}
+					}
+					console.log(newObjArr)
+					let materialSelected
+						let faceGeometry = new THREE.Geometry();
+						faceGeometry.vertices.push(new THREE.Vector3(v1.x, v1.y, v1.z));
+						faceGeometry.vertices.push(new THREE.Vector3(v2.x, v2.y, v2.z));
+						faceGeometry.vertices.push(new THREE.Vector3(v3.x, v3.y, v3.z));
+						let face3 = new THREE.Face3(0, 1, 2, face.normal, 0x00cc00, 0);
+						faceGeometry.faces.push(face3);
+						faceGeometry.computeFaceNormals();
+						faceGeometry.computeVertexNormals();
+						if(isRepeat(selectArr)) {
+							scene.remove(faceMesh);
+							console.log('重复')
+							selectArr = newObjArr
+							console.log(selectArr)
+							materialSelected = new THREE.MeshPhongMaterial({
+								color: 0x664324, //3D线条颜色
+								wireframe: true,
+							});
+							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+							faceMesh.position.y = -1200;
+							scene.add(faceMesh);
+							console.log(scene.children[2].children[0])
+							console.log(faceMesh)
+							$('.highlight').html('高亮')
+							//return materialSelected
+						} else {
+							console.log('没重复')
+							$('.highlight').html('取消高亮')
+							materialSelected = new THREE.MeshPhongMaterial({
+								color: 0xFF0000,
+								wireframe: false,
+							});
+							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+							faceMesh.position.y = -1200;
+							scene.add(faceMesh);
+
+						}
+
 					$('#vertexId1').val(face.a)
 					$('#vertexId2').val(face.b)
 					$('#vertexId3').val(face.c)
 					$('#indexId').val(intersects[0].faceIndex)
-					let v1 = result[face.a];
-					let v2 = result[face.b];
-					let v3 = result[face.c];
-					$('#textAx').val(v1[0])
-					$('#textAy').val(v1[1])
-					$('#textAz').val(v1[2])
-					$('#textBx').val(v2[0])
-					$('#textBy').val(v2[1])
-					$('#textBz').val(v2[2])
-					$('#textCx').val(v3[0])
-					$('#textCy').val(v3[1])
-					$('#textCz').val(v3[2])
-					let materialSelected = new THREE.MeshPhongMaterial({
-						color: 0xFF0000,
-						wireframe: false,
-					});
-					let faceGeometry = new THREE.Geometry();
-					faceGeometry.vertices.push(new THREE.Vector3(v1[0], v1[1], v1[2]));
-					faceGeometry.vertices.push(new THREE.Vector3(v2[0], v2[1], v2[2]));
-					faceGeometry.vertices.push(new THREE.Vector3(v3[0], v3[1], v3[2]));
-					console.log(faceGeometry)
-					let face3 = new THREE.Face3(0, 1, 2, face.normal, 0xFF0000, 0);
-					faceGeometry.faces.push(face3);
-					faceGeometry.computeFaceNormals();
-					faceGeometry.computeVertexNormals();
-					let material1 = new THREE.MeshPhongMaterial({
-						color: 0X707070, //3D线条颜色
-						wireframe: true,
-					});
-					faceMesh = new THREE.Mesh(faceGeometry, materialSelected)
-						faceMesh.position.y = -1200;
-						scene.add(faceMesh);
-					
+					$('#textAx').val(v1.x)
+					$('#textAy').val(v1.y)
+					$('#textAz').val(v1.z)
+					$('#textBx').val(v2.x)
+					$('#textBy').val(v2.y)
+					$('#textBz').val(v2.z)
+					$('#textCx').val(v3.x)
+					$('#textCy').val(v3.y)
+					$('#textCz').val(v3.z)
 				}
 			}
 
@@ -303,8 +371,16 @@
 				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
 				render();
 			}
+			let obj
 
 			function init() {
+				obj = getQueryString('obj')
+				const elt = document.createElement('a');
+				elt.setAttribute('href', obj);
+				elt.setAttribute('download', 'file.png');
+				elt.style.display = 'none';
+				document.body.appendChild(elt);
+				//elt.click();
 				initThree();
 				initScene();
 				initCamera();
@@ -312,9 +388,9 @@
 				initObject();
 				initControls();
 				window.addEventListener("resize", onWindowResize, false);
-				trackballControls.addEventListener('change', function(e) {
-					console.log(e);
-				});
+				//				trackballControls.addEventListener('change', function(e) {
+				//					console.log(e);
+				//				});
 				render();
 			}
 
@@ -325,7 +401,13 @@
 				requestAnimationFrame(render);
 				webGLRenderer.render(scene, camera);
 			}
+			let verticesArr = []
+			let highlightArr = []
+			
+			//高亮
 			$('.highlight').click(function() {
+				geometryArr = scene.children[2].children[0].geometry.faces
+				verticesArr = scene.children[2].children[0].geometry.vertices
 				let materialSelected = new THREE.MeshPhongMaterial({
 					color: 0xFF0000,
 					wireframe: false,
@@ -335,37 +417,74 @@
 					wireframe: true,
 				});
 				let index = parseFloat($('#indexId').val())
-				console.log(index)
-				if(index <= 0) {
+				if(!index) {
 					$('.wrapper').show()
 				} else {
-					let v1 = result[index];
-					let v2 = result[index + 1];
-					let v3 = result[index + 2];
-					console.log(v1)
+					let v1 = geometryArr[index].a;
+					let v2 = geometryArr[index].b;
+					let v3 = geometryArr[index].c;
 					let faceGeometry = new THREE.Geometry();
-					faceGeometry.vertices.push(new THREE.Vector3(v1[0], v1[1], v1[2]));
-					faceGeometry.vertices.push(new THREE.Vector3(v2[0], v2[1], v2[2]));
-					faceGeometry.vertices.push(new THREE.Vector3(v3[0], v3[1], v3[2]));
+					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v1].x, verticesArr[v1].y, verticesArr[v1].z));
+					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v2].x, verticesArr[v2].y, verticesArr[v2].z));
+					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v3].x, verticesArr[v3].y, verticesArr[v3].z));
 					let face3 = new THREE.Face3(0, 1, 2, 0xFF0000, 0);
 					faceGeometry.faces.push(face3);
 					faceGeometry.computeFaceNormals();
 					faceGeometry.computeVertexNormals();
-					faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-					faceMesh.position.y = -1200;
-					scene.add(faceMesh);
-					$('#vertexId1').val(index)
-					$('#vertexId2').val(index + 1)
-					$('#vertexId3').val(index + 2)
-					$('#textAx').val(v1[0])
-					$('#textAy').val(v1[1])
-					$('#textAz').val(v1[2])
-					$('#textBx').val(v2[0])
-					$('#textBy').val(v2[1])
-					$('#textBz').val(v2[2])
-					$('#textCx').val(v3[0])
-					$('#textCy').val(v3[1])
-					$('#textCz').val(v3[2])
+
+					highlightArr.push(index)
+					console.log(highlightArr)
+					const obj = {}
+					const newObjArr = []
+					for(let i = 0; i < highlightArr.length; i++) {
+						if(!obj[highlightArr[i]]) {
+							newObjArr.push(highlightArr[i]);
+							obj[highlightArr[i]] = true
+						} else {
+							//删除重复的那个元素得到新数组
+							removeByValue(newObjArr, highlightArr[i]);
+						}
+					}
+					if(isRepeat(highlightArr)) {
+						scene.remove(faceMesh);
+						console.log('重复')
+						highlightArr = newObjArr
+						console.log(highlightArr)
+						materialSelected = new THREE.MeshPhongMaterial({
+							color: 0x664324, //3D线条颜色
+							wireframe: true,
+						});
+						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+						faceMesh.position.y = -1200;
+						scene.add(faceMesh);
+						$('.highlight').html('高亮')
+						console.log(scene.children[2].children[0])
+						console.log(faceMesh)
+						//return materialSelected
+					} else {
+						console.log('没重复')
+						materialSelected = new THREE.MeshPhongMaterial({
+							color: 0xFF0000,
+							wireframe: false,
+						});
+						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+						faceMesh.position.y = -1200;
+						scene.add(faceMesh);
+						$('.highlight').html('取消高亮')
+					}
+					console.log(faceMesh)
+					$('#vertexId1').val(v1)
+					$('#vertexId2').val(v2)
+					$('#vertexId3').val(v3)
+					$('#textAx').val(verticesArr[v1].x)
+					$('#textAy').val(verticesArr[v1].y)
+					$('#textAz').val(verticesArr[v1].z)
+					$('#textBx').val(verticesArr[v2].x)
+					$('#textBy').val(verticesArr[v2].y)
+					$('#textBz').val(verticesArr[v2].z)
+					$('#textCx').val(verticesArr[v3].x)
+					$('#textCy').val(verticesArr[v3].y)
+					$('#textCz').val(verticesArr[v3].z)
 				}
 			})
 			$('#WebGL-output').click(function(event) {

@@ -5,5 +5,6 @@
 	"getObjDel":"/obj/delete",
 	"upload":"/storage/upload",
 	"getObjSave":"/obj/save",
-	"getObjDetail":"/obj/detail"
+	"getObjDetail":"/obj/detail",
+	"deleteFile":"/obj/deleteFile"
   }
