@@ -95,15 +95,15 @@
 				<button type="button" class="detail btn btn-info">详情模式</button>
 				<div class="debugging">
 					<div>
-					<div class="txt">平面index</div><input type="tel" class="form-control" id="indexId" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" /></div>
-				<div>
-					<div class="txt">平面顶点index</div><input type="tel" class="form-control" disabled id="vertexId1" /><input class="form-control" type="text" disabled id="vertexId2" /><input class="form-control" type="text" disabled id="vertexId3" /></div>
-				<div>
-					<div class="txt">平面顶点坐标A</div><input class="form-control" type="tel" id="textAx" disabled/><input type="text" class="form-control" id="textAy" disabled/><input type="text" class="form-control" id="textAz" disabled/></div>
-				<div>
-					<div class="txt">平面顶点坐标B</div><input class="form-control" type="tel" id="textBx" disabled/><input type="text" class="form-control" id="textBy" disabled/><input type="text" class="form-control" id="textBz" disabled/></div>
-				<div>
-					<div class="txt">平面顶点坐标C</div><input class="form-control" type="tel" id="textCx" disabled/><input type="text" class="form-control" id="textCy" disabled/><input type="text" class="form-control" id="textCz" disabled/></div>
+						<div class="txt">平面index</div><input type="tel" class="form-control" id="indexId" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" /></div>
+					<div>
+						<div class="txt">平面顶点index</div><input type="tel" class="form-control" disabled id="vertexId1" /><input class="form-control" type="text" disabled id="vertexId2" /><input class="form-control" type="text" disabled id="vertexId3" /></div>
+					<div>
+						<div class="txt">平面顶点坐标A</div><input class="form-control" type="tel" id="textAx" disabled/><input type="text" class="form-control" id="textAy" disabled/><input type="text" class="form-control" id="textAz" disabled/></div>
+					<div>
+						<div class="txt">平面顶点坐标B</div><input class="form-control" type="tel" id="textBx" disabled/><input type="text" class="form-control" id="textBy" disabled/><input type="text" class="form-control" id="textBz" disabled/></div>
+					<div>
+						<div class="txt">平面顶点坐标C</div><input class="form-control" type="tel" id="textCx" disabled/><input type="text" class="form-control" id="textCy" disabled/><input type="text" class="form-control" id="textCz" disabled/></div>
 				</div>
 				<button type="button" class="highlight btn btn-primary debugging">高亮</button>
 				<button type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
@@ -125,13 +125,12 @@
 			})
 			var flag = 1;
 			$('.detail').click(function() {
-
 				if($('.detail').html() == '详情模式') {
 					$('.debugging').hide()
 					$('.detail').html('调试模式')
 					initObjectDetail()
 				} else {
-						$('.debugging').show()
+					$('.debugging').show()
 					$('.detail').html('详情模式')
 					initObject()
 				}
@@ -180,19 +179,18 @@
 				light.position.set(0, 0, 50);
 				scene.add(light);
 			}
-			let geometryArr = []
 			let vertexArr = []
-			let faceArr = []
 			var result = []
 			var onProgress = function(xhr) {};
 			var onError = function(xhr) {};
 			var material
 
 			function initObject() {
-				console.log('initObject')
 				scene.remove(mesh);
+				scene.remove(faceMesh);
 				var objLoader = new THREE.OBJLoader();
 				objLoader.load('completeModel.obj', function(object) {
+						console.log(object)
 					material = new THREE.MeshPhongMaterial({
 						color: 0X707070,
 						wireframe: true
@@ -204,9 +202,10 @@
 					for(var i = 0; i < vertexArr.length; i += 3) {
 						result.push(vertexArr.slice(i, i + 3));
 					}
+					console.log(result)
 					object.position.y = -1200;
 					mesh = object
-					scene.add(object);
+					scene.add(mesh);
 				}, onProgress, onError);
 			}
 
@@ -228,12 +227,13 @@
 					}
 					object.position.y = -1200;
 					mesh = object
-					scene.add(object);
+					scene.add(mesh);
 				}, onProgress, onError);
 			}
 			let raycaster = new THREE.Raycaster();
 			let mouse = new THREE.Vector2();
 			let faceMesh;
+			let clickArr = []
 
 			function onDocumentMouseDown(event) {
 				let sphereMesh = scene.children[2].children[0]
@@ -279,13 +279,10 @@
 						color: 0X707070, //3D线条颜色
 						wireframe: true,
 					});
-					if(faceMesh && faceMesh.material.wireframe == false) {
-						faceMesh.material = material1
-					} else {
-						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-					}
-					faceMesh.position.y = -1200;
-					scene.add(faceMesh);
+					faceMesh = new THREE.Mesh(faceGeometry, materialSelected)
+						faceMesh.position.y = -1200;
+						scene.add(faceMesh);
+					
 				}
 			}
 
@@ -345,6 +342,7 @@
 					let v1 = result[index];
 					let v2 = result[index + 1];
 					let v3 = result[index + 2];
+					console.log(v1)
 					let faceGeometry = new THREE.Geometry();
 					faceGeometry.vertices.push(new THREE.Vector3(v1[0], v1[1], v1[2]));
 					faceGeometry.vertices.push(new THREE.Vector3(v2[0], v2[1], v2[2]));
@@ -368,41 +366,6 @@
 					$('#textCx').val(v3[0])
 					$('#textCy').val(v3[1])
 					$('#textCz').val(v3[2])
-					//					var posAx = vertices[0].x
-					//					var posAy = vertices[0].y
-					//					var posAz = vertices[0].z
-					//
-					//					var posBx = vertices[1].x
-					//					var posBy = vertices[1].y
-					//					var posBz = vertices[1].z
-					//
-					//					var posCx = vertices[2].x
-					//					var posCy = vertices[2].y
-					//					var posCz = vertices[2].z
-					//					$('#textAx').val(posAx)
-					//					$('#textAy').val(posAy)
-					//					$('#textAz').val(posAz)
-					//					$('#textBx').val(posBx)
-					//					$('#textBy').val(posBy)
-					//					$('#textBz').val(posBz)
-					//					$('#textCx').val(posCx)
-					//					$('#textCy').val(posCy)
-					//					$('#textCz').val(posCz)
-					//					$('#vertexId1').val(vertexArr[index].a)
-					//					$('#vertexId2').val(vertexArr[index].b)
-					//					$('#vertexId3').val(vertexArr[index].c)
-					//					console.log(faceMesh)
-					//					if(faceMesh.material.wireframe == false) {
-					//						console.log('1')
-					//						$('.highlight').html('高亮')
-					//						faceMesh.material = material1
-					//					} else {
-					//						console.log('2')
-					//						$('.highlight').html('取消高亮')
-					//						faceMesh.material = materialSelected
-					//					}
-					$('#WebGL-output').click
-
 				}
 			})
 			$('#WebGL-output').click(function(event) {
