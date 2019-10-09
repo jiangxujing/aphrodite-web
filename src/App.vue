@@ -29,6 +29,17 @@ body,html{
     color: #fff;
     padding:8px 20px;
 }
+.el-button--red {
+    background-color:#FF5353;
+    border-color: #FF5353;
+    color: #fff;
+}
+.el-button--red:hover,.el-button--red:focus{
+	  background-color:#FF7171;
+    border-color: #FF7171;
+    color:#fff;
+}
+
 	.el-button--yellow {
     background-color:#feb764;
     border-color: #feb764;
@@ -36,8 +47,8 @@ body,html{
     padding:8px 20px;
 }
 .el-button--green:hover,.el-button--green:focus{
-	  background-color:#D84545;
-    border-color: #D84545;
+	background-color:#FF7171;
+    border-color: #FF7171;
     color:#fff;
 }
 .el-pagination{

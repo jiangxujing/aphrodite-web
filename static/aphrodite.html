@@ -2,7 +2,7 @@
 <html>
 
 	<head>
-		<title>obj test </title>
+		<title>3D调试系统</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script type="text/javascript" src="jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="libs/three1.js"></script>
@@ -11,7 +11,9 @@
 		<script type="text/javascript" src="libs/OBJMTLoader.js"></script>
 		<script type="text/javascript" src="libs/TGALoader.js"></script>
 		<script type="text/javascript" src="libs/TrackballControls.js"></script>
-		<!--<script src="dat.gui.js"></script>-->
+		  <link rel="icon shortcut" href="logo.png">
+<!--		<script type="text/javascript" src="libs/download.js"></script>
+-->		<!--<script src="dat.gui.js"></script>-->
 		<!--<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script>
 		<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script>
 		<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script>-->
@@ -113,6 +115,7 @@
 				</div>
 				<button type="button" class="highlight btn btn-primary debugging">高亮</button>
 				<button type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
+					
 			</div>
 			<div class="wrapper">
 				<div class="box">
@@ -121,8 +124,11 @@
 				</div>
 			</div>
 		</div>
+		
 		<!-- Javascript code that runs our Three.js examples -->
 		<script type="text/javascript">
+		
+			
 			$('.exit').click(function() {
 				window.location.href = 'http://99.48.68.95:8086/ObjManagement'
 			})
@@ -199,33 +205,26 @@
 					return result ? decodeURIComponent(result[2]) : null
 				}
 			}
-
 			function initLight() {
-				spotLight = new THREE.DirectionalLight(0xC0C0C0);
-				spotLight.position.set(0, 0, -50);
+			spotLight = new THREE.DirectionalLight(0xC0C0C0);
+				spotLight.position.set(0, 0, -1);
 				spotLight.intensity = 3;
 				scene.add(spotLight);
 				var light = new THREE.DirectionalLight(0xC0C0C0) //
 				light.intensity = 3;
-				light.position.set(0, 0, 50);
+				light.position.set(0, 0, 1);
 				scene.add(light);
 			}
 			let geometryArr = []
 			let vertexArr = []
-
 			function initObject() {
 				scene.remove(mesh);
-				var material = new THREE.PointCloudMaterial({
-					size: 4,
-					vertexColors: false,
-					color: 0xff00ff
-				});
 				var loader = new THREE.OBJMTLLoader();
 				var materialSprite = new THREE.SpriteMaterial();
 				loader.load(obj, 'meinumo.mtl', function(loadedMesh) {
 					var materialSprite = new THREE.SpriteMaterial();
 					var material = new THREE.MeshPhongMaterial({
-						color: 0x664324,
+						color: 0X707070,
 						wireframe: true,
 					})
 					loadedMesh.children.forEach(function(child) {
@@ -236,20 +235,14 @@
 					scene.add(mesh);
 				});
 			}
-
 			function initObjectDetail() {
 				scene.remove(mesh);
-				var material = new THREE.PointCloudMaterial({
-					size: 4,
-					vertexColors: false,
-					color: 0xff00ff
-				});
 				var loader = new THREE.OBJMTLLoader();
 				var materialSprite = new THREE.SpriteMaterial();
 				loader.load(obj, 'meinumo.mtl', function(loadedMesh) {
 					var materialSprite = new THREE.SpriteMaterial();
 					var material = new THREE.MeshPhongMaterial({
-						color: 0x664324,
+					color: 0X707070,
 						wireframe: false,
 					})
 					loadedMesh.children.forEach(function(child) {
@@ -342,7 +335,7 @@
 							console.log('重复')
 							selectArr = newObjArr
 							materialSelected = new THREE.MeshPhongMaterial({
-								color: 0x664324, //3D线条颜色
+								color: 0X707070, //3D线条颜色
 								wireframe: true,
 							});
 							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
@@ -403,16 +396,16 @@
 
 			function init() {
 				obj = getQueryString('obj')
-				const elt = document.createElement('a');
-				elt.setAttribute('href', obj);
-				elt.setAttribute('download', 'file.png');
-				elt.style.display = 'none';
-				document.body.appendChild(elt);
-				//elt.click();
+				//本地下载文件
+//						$.ajax({
+//				    	url: obj,
+//				    	success: download.bind(true, "text/html", "dlAjaxCallback.obj")
+//				    });
 				initThree();
 				initScene();
 				initCamera();
 				initLight();
+				//initModel()
 				initObject();
 				initControls();
 				window.addEventListener("resize", onWindowResize, false);
@@ -441,7 +434,7 @@
 					wireframe: false,
 				});
 				let material1 = new THREE.MeshPhongMaterial({
-					color: 0x008000, //3D线条颜色
+					color: 0X707070, //3D线条颜色
 					wireframe: true,
 				});
 				let index = parseFloat($('#indexId').val())
@@ -486,7 +479,7 @@
 						selectArr = newObjArr
 						console.log(meshArr)
 						materialSelected = new THREE.MeshPhongMaterial({
-							color: 0x664324, //3D线条颜色
+							color: 0X707070, //3D线条颜色
 							wireframe: true,
 						});
 						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);

@@ -101,7 +101,7 @@ export default {
 .loginWrapper{
 	width:100%;
 	height:100%;
-	background: url(../image/login/beijing.png) no-repeat center top;
+	background: url(../image/login/bg.jpg) no-repeat center top;
 	background-size:100%;
 	.el-input{
 		width:100%
@@ -109,12 +109,20 @@ export default {
 	.loginInput{
 		    position: absolute;
 		    right: 5%;
-		    top: 55%;
+		    top: 40%;
 		    width: 320px;
 		    margin: -150px 0 0 -190px;
 		    padding: 40px;
 		    border-radius: 22px;
 		    background: #fff;
+  border: 1px #d7edff solid; 
+  border-radius: 5px; 
+  margin: 0px 0px 7px 0px;
+  box-shadow:5px 5px 10px gray;
+  background: -webkit-linear-gradient(left,#ffffff, #a7d6ff); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(right,#ffffff, #a7d6ff); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(right,#ffffff, #a7d6ff); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to right,#ffffff, #a7d6ff); /* 标准的语法（必须放在最后） */
 		    input{
 		    	height:45px;
 		    }

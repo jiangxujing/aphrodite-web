@@ -4,7 +4,7 @@
 			<div>
 				<el-form :inline="true" class="demo-form-inline">
 					<el-form-item label="名称：">
-						<el-input v-model="name" placeholder="请输入内容" clearable @clear="cleanData">
+						<el-input v-model="name" placeholder="请输入名称" clearable @clear="cleanData">
 						</el-input>
 					</el-form-item>
 					<el-form-item>
@@ -14,7 +14,7 @@
 				</el-form>
 			</div>
 			<div>
-				<el-table :data="tableData" style="width: 100%">
+				<el-table :data="tableData" style="width: 90%;margin:0 auto;margin-top:20px;" border>
 					<el-table-column prop="name" label="名称" align="center">
 					</el-table-column>
 					<el-table-column prop="fileUrl" label="文件名称" align="center">
@@ -25,11 +25,11 @@
 					</el-table-column>
 					<el-table-column prop="updateTime" label="修改时间" align="center" :formatter="$utils.dateFormat">
 					</el-table-column>
-					<el-table-column align="center" label="操作" width="100">
+					<el-table-column align="center" label="操作" width="130">
 						<template slot-scope="scope">
-							<el-button type="text" size="small" @click="build(scope.row)">调试</el-button>
-							<el-button type="text" size="small" @click="edit(scope.row)">编辑</el-button>
-							<el-button type="text" size="small" @click="deleteFun(scope.row)">删除</el-button>
+							<el-button type="warning" size="small" @click="build(scope.row)" icon="el-icon-setting">调试</el-button>
+							<el-button type="primary"  size="small" @click="build(scope.row)" icon="el-icon-edit" style="margin-top:10px;margin-left:0">编辑</el-button>
+							  <el-button type="danger" size="small" @click="build(scope.row)" icon="el-icon-delete" style="margin-top:10px;margin-left:0">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -302,6 +302,11 @@
 		}
 		.el-input__icon {
 			line-height: 25px;
+		}
+		.el-table th{
+			background:#FF6F6F;
+			height:70px;
+			color:#fff;
 		}
 	}
 </style>
