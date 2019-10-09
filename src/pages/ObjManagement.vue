@@ -28,8 +28,8 @@
 					<el-table-column align="center" label="操作" width="130">
 						<template slot-scope="scope">
 							<el-button type="warning" size="small" @click="build(scope.row)" icon="el-icon-setting">调试</el-button>
-							<el-button type="primary"  size="small" @click="build(scope.row)" icon="el-icon-edit" style="margin-top:10px;margin-left:0">编辑</el-button>
-							  <el-button type="danger" size="small" @click="build(scope.row)" icon="el-icon-delete" style="margin-top:10px;margin-left:0">删除</el-button>
+							<el-button type="primary"  size="small" @click="edit(scope.row)" icon="el-icon-edit" style="margin-top:10px;margin-left:0">编辑</el-button>
+							  <el-button type="danger" size="small" @click="deleteFun(scope.row)" icon="el-icon-delete" style="margin-top:10px;margin-left:0">删除</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -176,15 +176,7 @@
 				}
 			},
 			onBuild(rows) {
-				let req = {
-					name:this.objName || null,
-					fileUrl:this.fileUrl
-				}
-				api.post(api.getUrl('getObjSave'), req).then(res => {
-					this.boxShow = false
-							this.getObjList()
-				}).catch(() => {
-				})
+				window.location.href= 'http://99.48.68.95:8081/aphrodite.html?obj='+this.fileUrl
 			},
 			onAdd() {
 				this.objName = ''
