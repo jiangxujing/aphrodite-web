@@ -132,6 +132,7 @@
 			$('.detail').click(function() {
 				if($('.detail').html() == '详情模式') {
 					if(faceMesh) {
+						scene.remove(faceMesh);
 						for(var i=0;i<meshArr.length;i++){
 							scene.remove(meshArr[i]);
 						}
@@ -483,7 +484,7 @@
 						meshArr.splice(item,1);
 						console.log('重复')
 						selectArr = newObjArr
-						console.log(selectArr)
+						console.log(meshArr)
 						materialSelected = new THREE.MeshPhongMaterial({
 							color: 0x664324, //3D线条颜色
 							wireframe: true,
