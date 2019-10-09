@@ -11,9 +11,10 @@
 		<script type="text/javascript" src="libs/OBJMTLoader.js"></script>
 		<script type="text/javascript" src="libs/TGALoader.js"></script>
 		<script type="text/javascript" src="libs/TrackballControls.js"></script>
-		  <link rel="icon shortcut" href="logo.png">
-<!--		<script type="text/javascript" src="libs/download.js"></script>
--->		<!--<script src="dat.gui.js"></script>-->
+		<link rel="icon shortcut" href="logo.png">
+		<!--		<script type="text/javascript" src="libs/download.js"></script>
+-->
+		<!--<script src="dat.gui.js"></script>-->
 		<!--<script type="text/javascript" src="assets/fonts/helvetiker_regular.typeface.js"></script>
 		<script type="text/javascript" src="assets/fonts/helvetiker_bold.typeface.js"></script>
 		<script type="text/javascript" src="assets/fonts/bitstream_vera_sans_mono_roman.typeface.js"></script>-->
@@ -115,7 +116,7 @@
 				</div>
 				<button type="button" class="highlight btn btn-primary debugging">高亮</button>
 				<button type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
-					
+
 			</div>
 			<div class="wrapper">
 				<div class="box">
@@ -124,11 +125,9 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- Javascript code that runs our Three.js examples -->
 		<script type="text/javascript">
-		
-			
 			$('.exit').click(function() {
 				window.location.href = 'http://99.48.68.95:8086/ObjManagement'
 			})
@@ -139,7 +138,7 @@
 				if($('.detail').html() == '详情模式') {
 					if(faceMesh) {
 						scene.remove(faceMesh);
-						for(var i=0;i<meshArr.length;i++){
+						for(var i = 0; i < meshArr.length; i++) {
 							scene.remove(meshArr[i]);
 						}
 					}
@@ -205,8 +204,9 @@
 					return result ? decodeURIComponent(result[2]) : null
 				}
 			}
+
 			function initLight() {
-			spotLight = new THREE.DirectionalLight(0xC0C0C0);
+				spotLight = new THREE.DirectionalLight(0xC0C0C0);
 				spotLight.position.set(0, 0, -1);
 				spotLight.intensity = 3;
 				scene.add(spotLight);
@@ -217,6 +217,7 @@
 			}
 			let geometryArr = []
 			let vertexArr = []
+
 			function initObject() {
 				scene.remove(mesh);
 				var loader = new THREE.OBJMTLLoader();
@@ -235,6 +236,7 @@
 					scene.add(mesh);
 				});
 			}
+
 			function initObjectDetail() {
 				scene.remove(mesh);
 				var loader = new THREE.OBJMTLLoader();
@@ -242,7 +244,7 @@
 				loader.load(obj, 'meinumo.mtl', function(loadedMesh) {
 					var materialSprite = new THREE.SpriteMaterial();
 					var material = new THREE.MeshPhongMaterial({
-					color: 0X707070,
+						color: 0X707070,
 						wireframe: false,
 					})
 					loadedMesh.children.forEach(function(child) {
@@ -277,50 +279,51 @@
 			}
 			let faceMesh
 			let selectArr = []
-		
+
 			var index = 0
 			let meshArr = []
+
 			function onDocumentMouseDown(event) {
-					
-				//新建一个三维单位向量 假设z方向就是0.5
-				//根据照相机，把这个向量转换到视点坐标系
-				//这里定义深度值为0.5，深度值越大，意味着精度越高
-				var vector;
-				vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
-				vector = vector.unproject(camera)
-				// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
-				var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-				var intersects = raycaster.intersectObjects(scene.children[2].children);
-				if(intersects.length > 0) {
-					let intersect = intersects[0];
-					console.log(intersect)
-					let face = intersect.face;
-					//通过面的三个点索引值找到顶点坐标
-					let v1 = scene.children[2].children[0].geometry.vertices[face.a];
-					let v2 = scene.children[2].children[0].geometry.vertices[face.b];
-					let v3 = scene.children[2].children[0].geometry.vertices[face.c];
-					selectArr.push(intersects[0].faceIndex)
-					const obj = {}
-					const newObjArr = []
-					for(let i = 0; i < selectArr.length; i++) {
-						if(!obj[selectArr[i]]) {
-							newObjArr.push(selectArr[i]);
-							obj[selectArr[i]] = true
-						} else {
-							console.log(i)
-							//此循环是为了得到重复face的索引，因为场景中重复的要remove，所以要知道哪个重复了
-							for(var j=0;j<selectArr.length;j++){
-								if(intersects[0].faceIndex == newObjArr[j]){
-									index=j
-									console.log(index)
+				if($('.detail').html() == '详情模式') {
+					//新建一个三维单位向量 假设z方向就是0.5
+					//根据照相机，把这个向量转换到视点坐标系
+					//这里定义深度值为0.5，深度值越大，意味着精度越高
+					var vector;
+					vector = new THREE.Vector3((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1, 0.5);
+					vector = vector.unproject(camera)
+					// 在视点坐标系中形成射线,射线的起点向量是照相机， 射线的方向向量是照相机到点击的点，这个向量应该归一标准化。
+					var raycaster = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+					var intersects = raycaster.intersectObjects(scene.children[2].children);
+					if(intersects.length > 0) {
+						let intersect = intersects[0];
+						console.log(intersect)
+						let face = intersect.face;
+						//通过面的三个点索引值找到顶点坐标
+						let v1 = scene.children[2].children[0].geometry.vertices[face.a];
+						let v2 = scene.children[2].children[0].geometry.vertices[face.b];
+						let v3 = scene.children[2].children[0].geometry.vertices[face.c];
+						selectArr.push(intersects[0].faceIndex)
+						const obj = {}
+						const newObjArr = []
+						for(let i = 0; i < selectArr.length; i++) {
+							if(!obj[selectArr[i]]) {
+								newObjArr.push(selectArr[i]);
+								obj[selectArr[i]] = true
+							} else {
+								console.log(i)
+								//此循环是为了得到重复face的索引，因为场景中重复的要remove，所以要知道哪个重复了
+								for(var j = 0; j < selectArr.length; j++) {
+									if(intersects[0].faceIndex == newObjArr[j]) {
+										index = j
+										console.log(index)
+									}
 								}
+								//删除重复的那个元素得到新数组
+								removeByValue(newObjArr, selectArr[i]);
 							}
-							//删除重复的那个元素得到新数组
-							removeByValue(newObjArr, selectArr[i]);
 						}
-					}
-					console.log(newObjArr)
-					let materialSelected
+						console.log(newObjArr)
+						let materialSelected
 						let faceGeometry = new THREE.Geometry();
 						faceGeometry.vertices.push(new THREE.Vector3(v1.x, v1.y, v1.z));
 						faceGeometry.vertices.push(new THREE.Vector3(v2.x, v2.y, v2.z));
@@ -331,7 +334,7 @@
 						faceGeometry.computeVertexNormals();
 						if(isRepeat(selectArr)) {
 							scene.remove(meshArr[index]);
-							meshArr.splice(index,1);
+							meshArr.splice(index, 1);
 							console.log('重复')
 							selectArr = newObjArr
 							materialSelected = new THREE.MeshPhongMaterial({
@@ -359,19 +362,20 @@
 							console.log(meshArr)
 
 						}
-					$('#vertexId1').val(face.a)
-					$('#vertexId2').val(face.b)
-					$('#vertexId3').val(face.c)
-					$('#indexId').val(intersects[0].faceIndex)
-					$('#textAx').val(v1.x)
-					$('#textAy').val(v1.y)
-					$('#textAz').val(v1.z)
-					$('#textBx').val(v2.x)
-					$('#textBy').val(v2.y)
-					$('#textBz').val(v2.z)
-					$('#textCx').val(v3.x)
-					$('#textCy').val(v3.y)
-					$('#textCz').val(v3.z)
+						$('#vertexId1').val(face.a)
+						$('#vertexId2').val(face.b)
+						$('#vertexId3').val(face.c)
+						$('#indexId').val(intersects[0].faceIndex)
+						$('#textAx').val(v1.x)
+						$('#textAy').val(v1.y)
+						$('#textAz').val(v1.z)
+						$('#textBx').val(v2.x)
+						$('#textBy').val(v2.y)
+						$('#textBz').val(v2.z)
+						$('#textCx').val(v3.x)
+						$('#textCy').val(v3.y)
+						$('#textCz').val(v3.z)
+					}
 				}
 			}
 
@@ -397,10 +401,10 @@
 			function init() {
 				obj = getQueryString('obj')
 				//本地下载文件
-//						$.ajax({
-//				    	url: obj,
-//				    	success: download.bind(true, "text/html", "dlAjaxCallback.obj")
-//				    });
+				//						$.ajax({
+				//				    	url: obj,
+				//				    	success: download.bind(true, "text/html", "dlAjaxCallback.obj")
+				//				    });
 				initThree();
 				initScene();
 				initCamera();
@@ -424,7 +428,7 @@
 			}
 			let verticesArr = []
 			let highlightArr = []
-			
+
 			//高亮
 			$('.highlight').click(function() {
 				geometryArr = scene.children[2].children[0].geometry.faces
@@ -462,9 +466,9 @@
 							newObjArr.push(selectArr[i]);
 							obj[selectArr[i]] = true
 						} else {
-							for(var j=0;j<selectArr.length;j++){
-								if(index == newObjArr[j]){
-									item=j
+							for(var j = 0; j < selectArr.length; j++) {
+								if(index == newObjArr[j]) {
+									item = j
 									console.log(item)
 								}
 							}
@@ -474,7 +478,7 @@
 					}
 					if(isRepeat(selectArr)) {
 						scene.remove(meshArr[item]);
-						meshArr.splice(item,1);
+						meshArr.splice(item, 1);
 						console.log('重复')
 						selectArr = newObjArr
 						console.log(meshArr)
