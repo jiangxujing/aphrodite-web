@@ -268,8 +268,11 @@
 			}
 			let faceMesh
 			let selectArr = []
-
+		
+			var index = 0
+			let meshArr = []
 			function onDocumentMouseDown(event) {
+					
 				//新建一个三维单位向量 假设z方向就是0.5
 				//根据照相机，把这个向量转换到视点坐标系
 				//这里定义深度值为0.5，深度值越大，意味着精度越高
@@ -295,6 +298,14 @@
 							newObjArr.push(selectArr[i]);
 							obj[selectArr[i]] = true
 						} else {
+							console.log(i)
+							//此循环是为了得到重复face的索引，因为场景中重复的要remove，所以要知道哪个重复了
+							for(var j=0;j<selectArr.length;j++){
+								if(intersects[0].faceIndex == newObjArr[j]){
+									index=j
+									console.log(index)
+								}
+							}
 							//删除重复的那个元素得到新数组
 							removeByValue(newObjArr, selectArr[i]);
 						}
@@ -310,7 +321,10 @@
 						faceGeometry.computeFaceNormals();
 						faceGeometry.computeVertexNormals();
 						if(isRepeat(selectArr)) {
-							scene.remove(faceMesh);
+							console.log(index)
+							scene.remove(meshArr[index]);
+							meshArr.splice(index,1);
+							console.log(meshArr)
 							console.log('重复')
 							selectArr = newObjArr
 							console.log(selectArr)
@@ -319,10 +333,9 @@
 								wireframe: true,
 							});
 							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+							faceMesh.material = materialSelected
 							faceMesh.position.y = -1200;
 							scene.add(faceMesh);
-							console.log(scene.children[2].children[0])
-							console.log(faceMesh)
 							$('.highlight').html('高亮')
 							//return materialSelected
 						} else {
@@ -333,8 +346,11 @@
 								wireframe: false,
 							});
 							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+							faceMesh.material = materialSelected
 							faceMesh.position.y = -1200;
 							scene.add(faceMesh);
+							meshArr.push(faceMesh)
+							console.log(meshArr)
 
 						}
 
@@ -420,6 +436,7 @@
 				if(!index) {
 					$('.wrapper').show()
 				} else {
+					let item = 0
 					let v1 = geometryArr[index].a;
 					let v2 = geometryArr[index].b;
 					let v3 = geometryArr[index].c;
@@ -431,25 +448,31 @@
 					faceGeometry.faces.push(face3);
 					faceGeometry.computeFaceNormals();
 					faceGeometry.computeVertexNormals();
-
-					highlightArr.push(index)
-					console.log(highlightArr)
+					selectArr.push(index)
+					console.log(selectArr)
 					const obj = {}
 					const newObjArr = []
-					for(let i = 0; i < highlightArr.length; i++) {
-						if(!obj[highlightArr[i]]) {
-							newObjArr.push(highlightArr[i]);
-							obj[highlightArr[i]] = true
+					for(let i = 0; i < selectArr.length; i++) {
+						if(!obj[selectArr[i]]) {
+							newObjArr.push(selectArr[i]);
+							obj[selectArr[i]] = true
 						} else {
+							for(var j=0;j<selectArr.length;j++){
+								if(index == newObjArr[j]){
+									item=j
+									console.log(item)
+								}
+							}
 							//删除重复的那个元素得到新数组
-							removeByValue(newObjArr, highlightArr[i]);
+							removeByValue(newObjArr, selectArr[i]);
 						}
 					}
-					if(isRepeat(highlightArr)) {
-						scene.remove(faceMesh);
+					if(isRepeat(selectArr)) {
+						scene.remove(meshArr[item]);
+						meshArr.splice(item,1);
 						console.log('重复')
-						highlightArr = newObjArr
-						console.log(highlightArr)
+						selectArr = newObjArr
+						console.log(selectArr)
 						materialSelected = new THREE.MeshPhongMaterial({
 							color: 0x664324, //3D线条颜色
 							wireframe: true,
@@ -470,6 +493,7 @@
 						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
 						faceMesh.position.y = -1200;
 						scene.add(faceMesh);
+						meshArr.push(faceMesh)
 						$('.highlight').html('取消高亮')
 					}
 					console.log(faceMesh)
