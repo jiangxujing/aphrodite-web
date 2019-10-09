@@ -201,7 +201,7 @@
 				}
 				api.post(api.getUrl('getObjDetail'), req).then(res => {
 					if(res.code == '0000'){
-						window.location.href= 'http://99.48.68.95:8080/aphrodite.html?obj='+res.content.fileUrl
+						window.location.href= 'http://99.48.68.95:8081/aphrodite.html?obj='+res.content.fileUrl
 					}
 				}).catch(() => {
 					console.log("系统异常")

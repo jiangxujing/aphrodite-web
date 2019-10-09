@@ -130,14 +130,29 @@
 				$('.wrapper').toggle()
 			})
 			$('.detail').click(function() {
-				if(faceMesh) {
-					scene.remove(faceMesh);
-				}
 				if($('.detail').html() == '详情模式') {
+					if(faceMesh) {
+						for(var i=0;i<meshArr.length;i++){
+							scene.remove(meshArr[i]);
+						}
+					}
 					$('.debugging').hide()
 					$('.detail').html('调试模式')
 					initObjectDetail()
 				} else {
+					$('#vertexId1').val('')
+					$('#vertexId2').val('')
+					$('#vertexId3').val('')
+					$('#indexId').val('')
+					$('#textAx').val('')
+					$('#textAy').val('')
+					$('#textAz').val('')
+					$('#textBx').val('')
+					$('#textBy').val('')
+					$('#textBz').val('')
+					$('#textCx').val('')
+					$('#textCy').val('')
+					$('#textCz').val('')
 					$('.debugging').show()
 					$('.detail').html('详情模式')
 					initObject()
@@ -206,7 +221,7 @@
 				});
 				var loader = new THREE.OBJMTLLoader();
 				var materialSprite = new THREE.SpriteMaterial();
-				loader.load('completeModel.obj', 'meinumo.mtl', function(loadedMesh) {
+				loader.load(obj, 'meinumo.mtl', function(loadedMesh) {
 					var materialSprite = new THREE.SpriteMaterial();
 					var material = new THREE.MeshPhongMaterial({
 						color: 0x664324,
@@ -321,13 +336,10 @@
 						faceGeometry.computeFaceNormals();
 						faceGeometry.computeVertexNormals();
 						if(isRepeat(selectArr)) {
-							console.log(index)
 							scene.remove(meshArr[index]);
 							meshArr.splice(index,1);
-							console.log(meshArr)
 							console.log('重复')
 							selectArr = newObjArr
-							console.log(selectArr)
 							materialSelected = new THREE.MeshPhongMaterial({
 								color: 0x664324, //3D线条颜色
 								wireframe: true,
@@ -353,7 +365,6 @@
 							console.log(meshArr)
 
 						}
-
 					$('#vertexId1').val(face.a)
 					$('#vertexId2').val(face.b)
 					$('#vertexId3').val(face.c)
