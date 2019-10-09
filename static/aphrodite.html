@@ -230,8 +230,10 @@
 					})
 					loadedMesh.children.forEach(function(child) {
 						child.material = material;
+
 					});
-					loadedMesh.position.y = -1200;
+					loadedMesh.children[0].geometry.center()
+					//loadedMesh.position.y = -1200;
 					mesh = loadedMesh
 					scene.add(mesh);
 				});
@@ -250,7 +252,8 @@
 					loadedMesh.children.forEach(function(child) {
 						child.material = material;
 					});
-					loadedMesh.position.y = -1200;
+					loadedMesh.children[0].geometry.center()
+					//loadedMesh.position.y = -1200;
 					mesh = loadedMesh
 					scene.add(mesh);
 				});
@@ -343,7 +346,7 @@
 							});
 							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
 							faceMesh.material = materialSelected
-							faceMesh.position.y = -1200;
+							//faceMesh.position.y = -1200;
 							scene.add(faceMesh);
 							$('.highlight').html('高亮')
 							//return materialSelected
@@ -356,7 +359,7 @@
 							});
 							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
 							faceMesh.material = materialSelected
-							faceMesh.position.y = -1200;
+							//faceMesh.position.y = -1200;
 							scene.add(faceMesh);
 							meshArr.push(faceMesh)
 							console.log(meshArr)
@@ -487,7 +490,7 @@
 							wireframe: true,
 						});
 						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-						faceMesh.position.y = -1200;
+						//faceMesh.position.y = -1200;
 						scene.add(faceMesh);
 						$('.highlight').html('高亮')
 						console.log(scene.children[2].children[0])
@@ -500,7 +503,7 @@
 							wireframe: false,
 						});
 						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-						faceMesh.position.y = -1200;
+						//faceMesh.position.y = -1200;
 						scene.add(faceMesh);
 						meshArr.push(faceMesh)
 						$('.highlight').html('取消高亮')
