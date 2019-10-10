@@ -8,8 +8,8 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button @click="onSearch" type="green">查询</el-button>
-						<el-button @click="onAdd" type="green">新增</el-button>
+						<el-button @click="onSearch" type="green" icon="el-icon-search">查询</el-button>
+						<el-button @click="onAdd" type="green" icon="el-icon-circle-plus-outline">新增</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
@@ -111,7 +111,7 @@
 									type: 'success',
 									message: '删除成功'
 								})
-								this.fileUrl = res.content
+								this.fileUrl = ''
 							} else {
 								Message({
 									showClose: true,
@@ -176,7 +176,7 @@
 				}
 			},
 			onBuild(rows) {
-				window.location.href= 'http://99.48.68.95:8081/aphrodite.html?obj='+this.fileUrl
+				window.location.href= '/static/aphrodite.html?obj='+this.fileUrl
 			},
 			onAdd() {
 				this.objName = ''
@@ -193,7 +193,7 @@
 				}
 				api.post(api.getUrl('getObjDetail'), req).then(res => {
 					if(res.code == '0000'){
-						window.location.href= 'http://99.48.68.95:8081/aphrodite.html?obj='+res.content.fileUrl
+						window.location.href= 'static/aphrodite.html?obj='+res.content.fileUrl
 					}
 				}).catch(() => {
 					console.log("系统异常")
