@@ -29,9 +29,16 @@ body,html{
     color: #fff;
     padding:8px 20px;
 }
+	.el-button--add {
+    background-color:#336699;
+    border-color: #336699;
+    color: #fff;
+    padding:8px 20px;
+}
+
 .el-button--red {
-    background-color:#FF5353;
-    border-color: #FF5353;
+    background-color:#F56C6C;
+    border-color: #F56C6C;
     color: #fff;
 }
 .el-button--red:hover,.el-button--red:focus{
@@ -49,6 +56,16 @@ body,html{
 .el-button--green:hover,.el-button--green:focus{
 	background-color:#FF7171;
     border-color: #FF7171;
+    color:#fff;
+}
+.el-button--add:hover,.el-button--add:focus{
+	background-color:#4080BF;
+    border-color: #4080BF;
+    color:#fff;
+}
+.el-button--yellow:hover,.el-button--yellow:focus{
+	background-color:#FECA89;
+    border-color: #FECA89;
     color:#fff;
 }
 .el-pagination{

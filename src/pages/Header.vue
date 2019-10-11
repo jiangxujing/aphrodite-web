@@ -14,7 +14,7 @@
 		</el-header>
 		<el-container>
 			<el-aside width="200px">
-				<el-menu uniqueOpened :default-active="indexItem" background-color="#063C7C" text-color="#ccc" active-text-color="#fff">
+				<el-menu uniqueOpened :default-active="indexItem" background-color="#24608C" text-color="#ccc" active-text-color="#fff">
 					<el-menu-item :index="''+index" v-for="(i,index) in lists" :key='index' @click="goPage(i.path,i.id)">
 						<i class="el-icon-s-management"></i>
 						<span slot="title">{{i.title}}</span>
@@ -95,7 +95,7 @@
 		height: 100%;
 		width: 100%;
 		.el-header {
-			background-color: #063C7C;
+			background-color: #24608C;
 			color: #333;
 			text-align: center;
 			line-height: 70px;
@@ -144,7 +144,7 @@
 				text-align: center;
 				line-height: 200px;
 				.el-menu-item.is-active {
-					background-color: #FF5353!important;
+					background-color: #F56C6C!important;
 				}
 				.is-active:hover {
 					background-color: #FF7171!important;

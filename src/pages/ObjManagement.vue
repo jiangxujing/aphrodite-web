@@ -8,13 +8,13 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button @click="onSearch" type="green" icon="el-icon-search">查询</el-button>
-						<el-button @click="onAdd" type="green" icon="el-icon-circle-plus-outline">新增</el-button>
+						<el-button @click="onSearch" type="red" icon="el-icon-search" style="padding:8px 20px">查询</el-button>
+						<el-button @click="onAdd" type="add" style="padding: 8px 20px;" icon="el-icon-circle-plus-outline">新增</el-button>
 					</el-form-item>
 				</el-form>
 			</div>
 			<div>
-				<el-table :data="tableData" style="width: 90%;margin:0 auto;margin-top:20px;" border>
+				<el-table :data="tableData" style="width: 100%;margin:0 auto;margin-top:20px;" border>
 					<el-table-column prop="name" label="名称" align="center">
 					</el-table-column>
 					<el-table-column prop="fileUrl" label="文件名称" align="center">
@@ -28,7 +28,7 @@
 					<el-table-column align="center" label="操作" width="130">
 						<template slot-scope="scope">
 							<el-button type="warning" size="small" @click="build(scope.row)" icon="el-icon-setting">调试</el-button>
-							<el-button type="primary"  size="small" @click="edit(scope.row)" icon="el-icon-edit" style="margin-top:10px;margin-left:0">编辑</el-button>
+							<el-button type="add" @click="edit(scope.row)" icon="el-icon-edit" style="margin-top:10px;margin-left:0;padding: 9px 15px;">编辑</el-button>
 							  <el-button type="danger" size="small" @click="deleteFun(scope.row)" icon="el-icon-delete" style="margin-top:10px;margin-left:0">删除</el-button>
 						</template>
 					</el-table-column>
@@ -42,25 +42,25 @@
 				<el-row>
 					<el-col :span="4" class="search-label"><span class="red">*</span><span class="label">名称：</span></el-col>
 					<el-col :span="4">
-						<el-input v-model="objName" clearable placeholder="名称" style="width:300px"></el-input>
+						<el-input v-model="objName" maxlength="100" clearable placeholder="名称" style="width:300px" @input="checkLength"></el-input>
 					</el-col>
 				</el-row>
 				<el-row>
-					<el-col :span="4" class="search-label"><span class="label">Obj文件：</span></el-col>
+					<el-col :span="4" class="search-label"><span class="red">*</span><span class="label">Obj文件：</span></el-col>
 					<el-col :span="10">
 						<el-input type="text" v-model="fileUrl" style="width:300px" clearable></el-input>
 						<el-upload v-if="!fileUrl" class="upload-demo" style="text-align:left;display: inline-block;" accept="*" :show-file-list="false" :http-request="importExport" action="string">
 							<el-button size="small" type="green">上传</el-button>
 						</el-upload>
-						<el-button @click="deleteObj" size="small" type="yellow" v-else>删除</el-button>
+						<el-button @click="deleteObj" type="warning" style="padding:8px 20px" v-else>删除</el-button>
 					</el-col>
 					
 				</el-row>
 				<el-row>
 					<div style="text-align: center;">
 						<el-button @click="onBuild" type="green">调试</el-button>
-						<el-button @click="onSave" type="green">保存</el-button>
-						<el-button @click="onCancle" type="yellow">取消</el-button>
+						<el-button @click="onSave" type="add">保存</el-button>
+						<el-button @click="onCancle" type="warning" style="padding:8px 20px">取消</el-button>
 					</div>
 				</el-row>
 			</div>
@@ -92,6 +92,16 @@
 			//点击❌，请求全部数据，不用点查询
 			cleanData() {
 				this.getObjList()
+			},
+			checkLength(){
+				console.log(this.objName.length)
+				if(this.objName.length >= 100){
+					Message({
+							showClose: true,
+							type: 'error',
+							message: '名称长度已达上限！'
+						})
+				}
 			},
 			deleteObj(){
 				let req = {
@@ -296,9 +306,13 @@
 			line-height: 25px;
 		}
 		.el-table th{
-			background:#FF6F6F;
-			height:70px;
+			background:#24608C;
+			/*height:70px;*/
 			color:#fff;
 		}
+		
 	}
+	.el-loading-spinner i{
+			font-size:50px!important;
+		}
 </style>

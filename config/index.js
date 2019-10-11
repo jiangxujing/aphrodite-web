@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
       proxyTable: {
     	 '/aphrodite/**': {
-        target: 'http://99.48.68.100:8097', // 你接口的域名
+        target: 'http://99.48.68.106:8093', // 你接口的域名
         secure: false,
         changeOrigin: false,
       }

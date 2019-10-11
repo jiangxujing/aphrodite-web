@@ -72,9 +72,9 @@
 				font-size: 16px;
 			}
 			
-			.btn {
+			/*.btn {
 				margin-top: 15px;
-			}
+			}*/
 			
 			.positioning {
 				background: #00AB29;
@@ -101,11 +101,14 @@
 		<div style="width:100%">
 			<div id="WebGL-output" style="width:80%;height:80%">
 			</div>
-			<div class="text" id="text">
-				<button type="button" class="detail btn btn-info">详情模式</button>
+			<div class="text" id="text" style="text-align: center;">
 				<div class="debugging">
+					<button type="button" class="detail btn btn-info" style="background: #24608C;border:#24608C;margin-bottom:10px">详情模式</button>
+				<div style="text-align: left;">
 					<div>
-						<div class="txt">平面index</div><input type="tel" class="form-control" id="indexId" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" /></div>
+						<div class="txt">平面index</div><input type="tel" class="form-control" id="indexId" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" />
+						<button type="button" class="highlight btn btn-primary debugging" style="background: #3399CC;border:#3399CC;margin-left:10px">高亮</button>
+					</div>
 					<div>
 						<div class="txt">平面顶点index</div><input type="tel" class="form-control" disabled id="vertexId1" /><input class="form-control" type="text" disabled id="vertexId2" /><input class="form-control" type="text" disabled id="vertexId3" /></div>
 					<div>
@@ -115,9 +118,12 @@
 					<div>
 						<div class="txt">平面顶点坐标C</div><input class="form-control" type="tel" id="textCx" disabled/><input type="text" class="form-control" id="textCy" disabled/><input type="text" class="form-control" id="textCz" disabled/></div>
 				</div>
-				<button type="button" class="highlight btn btn-primary debugging">高亮</button>
-				<button type="button" class="exit  btn btn-warning" style="margin-left:10px;color:#fff">退出</button>
-
+				<button type="button" class="exit  btn btn-warning" style="background:#E6A23C;margin-left:10px;color:#fff;width:100px;margin-top:15px">退出</button>
+				</div>
+				<div class="detailStyle" style="display: none;">
+					<button type="button" class="detail btn btn-info" style="background: #24608C;border:#24608C;">详情模式</button>
+					<button type="button" class="exit  btn btn-warning" style="background:#E6A23C;margin-left:10px;color:#fff;width:100px;">退出</button>
+				</div>
 			</div>
 			<div class="wrapper">
 				<div class="box">
@@ -144,6 +150,7 @@
 						}
 					}
 					$('.debugging').hide()
+					$('.detailStyle').show()
 					$('.detail').html('调试模式')
 					initObjectDetail()
 				} else {
@@ -161,6 +168,7 @@
 					$('#textCy').val('')
 					$('#textCz').val('')
 					$('.debugging').show()
+					$('.detailStyle').hide()
 					$('.detail').html('详情模式')
 					initObject()
 				}
@@ -173,7 +181,7 @@
 			function initThree() {
 				webGLRenderer = new THREE.WebGLRenderer();
 				webGLRenderer.setSize(window.innerWidth, window.innerHeight);
-				webGLRenderer.setClearColor(0x008080);
+				webGLRenderer.setClearColor(0x24608C);
 				document.getElementById("WebGL-output").appendChild(webGLRenderer.domElement);
 			}
 			var camera;

@@ -71,7 +71,6 @@ const postExcel = (url, data) => {
         loading && loading.close()
         loading = Loading.service({
             target: '#main-root',
-            text: 'Loading',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
         })
@@ -219,14 +218,13 @@ const upload = (url, data) => {
         loading && loading.close()
         loading = Loading.service({
             target: '#main-root',
-            text: 'Loading',
             spinner: 'el-icon-loading',
             background: 'rgba(0, 0, 0, 0.7)'
         })
     }
 
     let timeout = 10 * sec
-
+ showLoading()
     return axios({
         method: 'post',
         url: url,
