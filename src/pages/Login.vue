@@ -177,7 +177,7 @@
 	        // 初始化场景
 	        scene = new THREE.Scene();
 	        // 初始化相机
-	        camera = new THREE.PerspectiveCamera(45, dom.clientWidth / dom.clientHeight, 1, 10000);
+	        camera = new THREE.PerspectiveCamera(35, dom.clientWidth / dom.clientHeight, 1, 10000);
 	        // 设置相机位置
 	        camera.position.set(0, 0, 500);
 	        renderer = new THREE.WebGLRenderer({
@@ -228,10 +228,11 @@
 	    }
 	    
 	    // 页面资源加载完全执行函数
-	    window.onload = function () {
-	    	initThree()
-	    	//aceInitFun()
-	    }
+//	    window.onload = function () {
+//	    	console.log('hhhhhhhhhhhhhhhhhhhhh')
+//	    	initThree()
+//	    	//aceInitFun()
+//	    }
 	    // 窗口resize事件
 	    window.onresize = function () {
 	    	// 重新初始化尺寸
@@ -239,6 +240,7 @@
 	        camera.updateProjectionMatrix()
 	        renderer.setSize(dom.clientWidth, dom.clientHeight)
 	    }
+	    initThree()
 		},
 	}
 </script>

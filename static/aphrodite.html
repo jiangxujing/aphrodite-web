@@ -3,7 +3,7 @@
 
 	<head>
 		<title>3D调试系统</title>
-		 <meta charset="utf-8">
+		<meta charset="utf-8">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<script type="text/javascript" src="jquery-1.12.4.js"></script>
 		<script type="text/javascript" src="libs/three1.js"></script>
@@ -71,7 +71,6 @@
 				padding-top: 20px;
 				font-size: 16px;
 			}
-			
 			/*.btn {
 				margin-top: 15px;
 			}*/
@@ -94,6 +93,12 @@
 				display: inline-block;
 				font-weight: bold;
 			}
+			
+			.tipsShow {
+				margin: 10px 0 10px 91px;
+				color: gray;
+				font-size: 12px;
+			}
 		</style>
 	</head>
 
@@ -104,21 +109,22 @@
 			<div class="text" id="text" style="text-align: center;">
 				<div class="debugging">
 					<button type="button" class="detail btn btn-info" style="background: #24608C;border:#24608C;margin-bottom:10px">详情模式</button>
-				<div style="text-align: left;">
-					<div>
-						<div class="txt">平面index</div><input type="tel" class="form-control" id="indexId" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" />
-						<button type="button" class="highlight btn btn-primary debugging" style="background: #3399CC;border:#3399CC;margin-left:10px">高亮</button>
+					<div style="text-align: left;">
+						<div>
+							<div class="txt">平面index</div><input type="tel" class="form-control" id="indexId" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" oninput="myFunction()"/>
+							<button type="button" class="highlight btn btn-primary debugging" style="background: #3399CC;border:#3399CC;margin-left:10px">高亮</button>
+						</div>
+						<div class="tipsShow" style="display: none;">总共<span class="faceIndex"></span>个平面</div>
+						<div>
+							<div class="txt">平面顶点index</div><input type="tel" class="form-control" disabled id="vertexId1" /><input class="form-control" type="text" disabled id="vertexId2" /><input class="form-control" type="text" disabled id="vertexId3" /></div>
+						<div>
+							<div class="txt">平面顶点坐标A</div><input class="form-control" type="tel" id="textAx" disabled/><input type="text" class="form-control" id="textAy" disabled/><input type="text" class="form-control" id="textAz" disabled/></div>
+						<div>
+							<div class="txt">平面顶点坐标B</div><input class="form-control" type="tel" id="textBx" disabled/><input type="text" class="form-control" id="textBy" disabled/><input type="text" class="form-control" id="textBz" disabled/></div>
+						<div>
+							<div class="txt">平面顶点坐标C</div><input class="form-control" type="tel" id="textCx" disabled/><input type="text" class="form-control" id="textCy" disabled/><input type="text" class="form-control" id="textCz" disabled/></div>
 					</div>
-					<div>
-						<div class="txt">平面顶点index</div><input type="tel" class="form-control" disabled id="vertexId1" /><input class="form-control" type="text" disabled id="vertexId2" /><input class="form-control" type="text" disabled id="vertexId3" /></div>
-					<div>
-						<div class="txt">平面顶点坐标A</div><input class="form-control" type="tel" id="textAx" disabled/><input type="text" class="form-control" id="textAy" disabled/><input type="text" class="form-control" id="textAz" disabled/></div>
-					<div>
-						<div class="txt">平面顶点坐标B</div><input class="form-control" type="tel" id="textBx" disabled/><input type="text" class="form-control" id="textBy" disabled/><input type="text" class="form-control" id="textBz" disabled/></div>
-					<div>
-						<div class="txt">平面顶点坐标C</div><input class="form-control" type="tel" id="textCx" disabled/><input type="text" class="form-control" id="textCy" disabled/><input type="text" class="form-control" id="textCz" disabled/></div>
-				</div>
-				<button type="button" class="exit  btn btn-warning" style="background:#E6A23C;margin-left:10px;color:#fff;width:100px;margin-top:15px">退出</button>
+					<button type="button" class="exit  btn btn-warning" style="background:#E6A23C;margin-left:10px;color:#fff;width:100px;margin-top:15px">退出</button>
 				</div>
 				<div class="detailStyle" style="display: none;">
 					<button type="button" class="detail btn btn-info" style="background: #24608C;border:#24608C;">详情模式</button>
@@ -127,8 +133,8 @@
 			</div>
 			<div class="wrapper">
 				<div class="box">
-					<div class="title">您没有填入index</div>
-					<button class="btn btn-primary confirmBtn">确定</button>
+					<div class="title"></div>
+					<button class="btn btn-primary confirmBtn" style="background: #3399CC;border:#3399CC;margin-top:10px">确定</button>
 				</div>
 			</div>
 		</div>
@@ -226,7 +232,7 @@
 			}
 			let geometryArr = []
 			let vertexArr = []
-
+			let faceLength;
 			function initObject() {
 				scene.remove(mesh);
 				var loader = new THREE.OBJMTLLoader();
@@ -242,6 +248,11 @@
 
 					});
 					loadedMesh.children[0].geometry.center()
+					faceLength = loadedMesh.children[0].geometry.faces.length
+					if(!!faceLength) {
+						$('.tipsShow').show()
+					}
+					$('.faceIndex').html(faceLength)
 					//loadedMesh.position.y = -1200;
 					mesh = loadedMesh
 					scene.add(mesh);
@@ -421,8 +432,8 @@
 				initScene();
 				initCamera();
 				initLight();
-				//initModel()
 				initObject();
+				
 				initControls();
 				window.addEventListener("resize", onWindowResize, false);
 				//				trackballControls.addEventListener('change', function(e) {
@@ -440,7 +451,20 @@
 			}
 			let verticesArr = []
 			let highlightArr = []
-
+			
+			//监听input输入事件
+			function myFunction(){
+				let index = parseFloat($('#indexId').val())
+				$('.highlight').html('高亮')
+				for(var i in selectArr){
+					console.log(selectArr[i])
+					console.log(index)
+					if(selectArr[i] == index){
+						console.log('在这吗')
+						$('.highlight').html('取消高亮')
+					}
+				}
+			}
 			//高亮
 			$('.highlight').click(function() {
 				geometryArr = scene.children[2].children[0].geometry.faces
@@ -453,83 +477,104 @@
 					color: 0X707070, //3D线条颜色
 					wireframe: true,
 				});
-				let index = parseFloat($('#indexId').val())
-				if(!index) {
+				let index = parseFloat($('#indexId').val()) 
+				if(!index && index != 0) {
+					$('.title').html('您还没有填入index')
 					$('.wrapper').show()
 				} else {
-					let item = 0
-					let v1 = geometryArr[index].a;
-					let v2 = geometryArr[index].b;
-					let v3 = geometryArr[index].c;
-					let faceGeometry = new THREE.Geometry();
-					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v1].x, verticesArr[v1].y, verticesArr[v1].z));
-					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v2].x, verticesArr[v2].y, verticesArr[v2].z));
-					faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v3].x, verticesArr[v3].y, verticesArr[v3].z));
-					let face3 = new THREE.Face3(0, 1, 2, 0xFF0000, 0);
-					faceGeometry.faces.push(face3);
-					faceGeometry.computeFaceNormals();
-					faceGeometry.computeVertexNormals();
-					selectArr.push(index)
-					console.log(selectArr)
-					const obj = {}
-					const newObjArr = []
-					for(let i = 0; i < selectArr.length; i++) {
-						if(!obj[selectArr[i]]) {
-							newObjArr.push(selectArr[i]);
-							obj[selectArr[i]] = true
-						} else {
-							for(var j = 0; j < selectArr.length; j++) {
-								if(index == newObjArr[j]) {
-									item = j
-									console.log(item)
-								}
-							}
-							//删除重复的那个元素得到新数组
-							removeByValue(newObjArr, selectArr[i]);
-						}
-					}
-					if(isRepeat(selectArr)) {
-						scene.remove(meshArr[item]);
-						meshArr.splice(item, 1);
-						console.log('重复')
-						selectArr = newObjArr
-						console.log(meshArr)
-						materialSelected = new THREE.MeshPhongMaterial({
-							color: 0X707070, //3D线条颜色
-							wireframe: true,
-						});
-						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-						//faceMesh.position.y = -1200;
-						scene.add(faceMesh);
-						$('.highlight').html('高亮')
-						console.log(scene.children[2].children[0])
-						console.log(faceMesh)
-						//return materialSelected
+					if(index > faceLength) {
+						$('#vertexId1').val('')
+						$('#vertexId2').val('')
+						$('#vertexId3').val('')
+						$('#textAx').val('')
+						$('#textAy').val('')
+						$('#textAz').val('')
+						$('#textBx').val('')
+						$('#textBy').val('')
+						$('#textBz').val('')
+						$('#textCx').val('')
+						$('#textCy').val('')
+						$('#textCz').val('')
+						$('.debugging').show()
+						$('.detailStyle').hide()
+						$('.title').html('平面index不能超过' + (faceLength))
+						$('.wrapper').show()
 					} else {
-						console.log('没重复')
-						materialSelected = new THREE.MeshPhongMaterial({
-							color: 0xFF0000,
-							wireframe: false,
-						});
-						faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
-						//faceMesh.position.y = -1200;
-						scene.add(faceMesh);
-						meshArr.push(faceMesh)
-						$('.highlight').html('取消高亮')
+						let item = 0
+						let v1 = geometryArr[index-1].a;
+						let v2 = geometryArr[index-1].b;
+						let v3 = geometryArr[index-1].c;
+						let faceGeometry = new THREE.Geometry();
+						faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v1].x, verticesArr[v1].y, verticesArr[v1].z));
+						faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v2].x, verticesArr[v2].y, verticesArr[v2].z));
+						faceGeometry.vertices.push(new THREE.Vector3(verticesArr[v3].x, verticesArr[v3].y, verticesArr[v3].z));
+						let face3 = new THREE.Face3(0, 1, 2, 0xFF0000, 0);
+						faceGeometry.faces.push(face3);
+						faceGeometry.computeFaceNormals();
+						faceGeometry.computeVertexNormals();
+						selectArr.push(index)
+						console.log(selectArr)
+						const obj = {}
+						const newObjArr = []
+						for(let i = 0; i < selectArr.length; i++) {
+							if(!obj[selectArr[i]]) {
+								newObjArr.push(selectArr[i]);
+								obj[selectArr[i]] = true
+							} else {
+								for(var j = 0; j < selectArr.length; j++) {
+									if(index == newObjArr[j]) {
+										item = j
+										console.log(item)
+									}
+								}
+								//删除重复的那个元素得到新数组
+								removeByValue(newObjArr, selectArr[i]);
+							}
+						}
+						if(isRepeat(selectArr)) {
+							scene.remove(meshArr[item]);
+							meshArr.splice(item, 1);
+							console.log('重复')
+							selectArr = newObjArr
+							console.log(meshArr)
+							materialSelected = new THREE.MeshPhongMaterial({
+								color: 0X707070, //3D线条颜色
+								wireframe: true,
+							});
+							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+							//faceMesh.position.y = -1200;
+							scene.add(faceMesh);
+							$('.highlight').html('高亮')
+							console.log(scene.children[2].children[0])
+							console.log(faceMesh)
+							//return materialSelected
+						} else {
+							console.log('没重复')
+							materialSelected = new THREE.MeshPhongMaterial({
+								color: 0xFF0000,
+								wireframe: false,
+							});
+							faceMesh = new THREE.Mesh(faceGeometry, materialSelected);
+							//faceMesh.position.y = -1200;
+							scene.add(faceMesh);
+							meshArr.push(faceMesh)
+							$('.highlight').html('取消高亮')
+						}
+						console.log(faceMesh)
+						$('#vertexId1').val(v1)
+						$('#vertexId2').val(v2)
+						$('#vertexId3').val(v3)
+						$('#textAx').val(verticesArr[v1].x)
+						$('#textAy').val(verticesArr[v1].y)
+						$('#textAz').val(verticesArr[v1].z)
+						$('#textBx').val(verticesArr[v2].x)
+						$('#textBy').val(verticesArr[v2].y)
+						$('#textBz').val(verticesArr[v2].z)
+						$('#textCx').val(verticesArr[v3].x)
+						$('#textCy').val(verticesArr[v3].y)
+						$('#textCz').val(verticesArr[v3].z)
 					}
-					console.log(faceMesh)
-					$('#vertexId1').val(v1)
-					$('#vertexId2').val(v2)
-					$('#vertexId3').val(v3)
-					$('#textAx').val(verticesArr[v1].x)
-					$('#textAy').val(verticesArr[v1].y)
-					$('#textAz').val(verticesArr[v1].z)
-					$('#textBx').val(verticesArr[v2].x)
-					$('#textBy').val(verticesArr[v2].y)
-					$('#textBz').val(verticesArr[v2].z)
-					$('#textCx').val(verticesArr[v3].x)
-					$('#textCy').val(verticesArr[v3].y)
-					$('#textCz').val(verticesArr[v3].z)
+
 				}
 			})
 			$('#WebGL-output').click(function(event) {

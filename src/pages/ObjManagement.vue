@@ -148,7 +148,8 @@
 							type: 'success',
 							message: '上传成功'
 						})
-						this.fileUrl = res.content
+						this.fileUrl = res.content.storageName
+						this.originalFileName = res.content.originalFileName
 					} else {
 						Message({
 							showClose: true,
@@ -163,7 +164,8 @@
 					let req = {
 						id: this.id || null,
 						name: this.objName,
-						fileUrl: this.fileUrl
+						storageName: this.fileUrl,
+						originalFileName:this.originalFileName
 					}
 					api.post(api.getUrl('getObjSave'), req).then(res => {
 						if(res.code == '0000') {
@@ -186,7 +188,15 @@
 				}
 			},
 			onBuild(rows) {
-				window.location.href= '/static/aphrodite.html?obj='+this.fileUrl
+				if(!this.fileUrl){
+					this.$message({
+						type: 'info',
+						message: '该模型已删除，请重新上传！'
+					});
+				}else{
+					window.location.href= '/static/aphrodite.html?obj='+this.fileUrl
+				}
+				
 			},
 			onAdd() {
 				this.objName = ''
@@ -203,7 +213,7 @@
 				}
 				api.post(api.getUrl('getObjDetail'), req).then(res => {
 					if(res.code == '0000'){
-						window.location.href= 'static/aphrodite.html?obj='+res.content.fileUrl
+						window.location.href= 'static/aphrodite.html?obj='+res.content.downloadUrl
 					}
 				}).catch(() => {
 					console.log("系统异常")
@@ -223,7 +233,8 @@
 				api.post(api.getUrl('getObjDetail'), req).then(res => {
 					let content = res.content
 					this.objName = content.name
-					this.fileUrl = content.fileUrl
+					this.fileUrl = content.downloadUrl
+					this.originalFileName = content.fileUrl
 				}).catch(() => {
 					console.log("系统异常")
 				})
